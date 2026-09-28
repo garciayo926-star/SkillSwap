@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\SkillSwap.API\\SkillSwap.API.csproj": {}
+    "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\sKillSwap.API\\SkillSwap.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\SkillSwap.API\\SkillSwap.API.csproj": {
+    "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\sKillSwap.API\\SkillSwap.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\SkillSwap.API\\SkillSwap.API.csproj",
+        "projectUniqueName": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\sKillSwap.API\\SkillSwap.API.csproj",
         "projectName": "SkillSwap.API",
-        "projectPath": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\SkillSwap.API\\SkillSwap.API.csproj",
+        "projectPath": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\sKillSwap.API\\SkillSwap.API.csproj",
         "packagesPath": "C:\\Users\\Luis Almachi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\SkillSwap.API\\obj\\",
+        "outputPath": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\sKillSwap.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Luis Almachi\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -49,6 +49,16 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.12, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[10.0.3, )"
             }
           },
           "imports": [
