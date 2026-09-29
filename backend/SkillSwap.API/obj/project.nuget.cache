@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pGzphpWHWIg=",
+  "dgSpecHash": "5NlS6qjwY2Q=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\sKillSwap.API\\SkillSwap.API.csproj",
+  "projectFilePath": "C:\\Users\\Luis Almachi\\Downloads\\PROYECTOS\\SkillSwap\\backend\\SkillSwap.API\\SkillSwap.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Luis Almachi\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Luis Almachi\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
