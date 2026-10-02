@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public Guid UserId { get; set; }
-        public User User { get; set; } = null!;
+        public User? User { get; set; }
         public string Bio { get; set; } = string.Empty;
 
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();

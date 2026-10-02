@@ -16,30 +16,49 @@ namespace SkillSwap.API.Controllers
             _context = context;
         }
 
+        // GET: api/Exchanges (Listar todos los intercambios)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Exchange>>> GetExchanges()
+        {
+            return await _context.Exchanges
+                .Include(e => e.InitiatorStudent).ThenInclude(s => s.User)
+                .Include(e => e.ReceiverStudent).ThenInclude(s => s.User)
+                .ToListAsync();
+        }
+
+        // GET: api/Exchanges/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Exchange>> GetExchange(int id)
+        {
+            var exchange = await _context.Exchanges
+                .Include(e => e.InitiatorStudent).ThenInclude(s => s.User)
+                .Include(e => e.ReceiverStudent).ThenInclude(s => s.User)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (exchange == null) return NotFound(new { message = "Intercambio no encontrado." });
+            return exchange;
+        }
+
         // GET: api/Exchanges/matches/{studentId} (Motor de Coincidencias Automáticas)
         [HttpGet("matches/{studentId}")]
         public async Task<IActionResult> GetMatchesForStudent(int studentId)
         {
-            // 1. VALIDACIÓN DE ID: Comprobar si el estudiante realmente existe
             var studentExists = await _context.Students.AnyAsync(s => s.Id == studentId);
             if (!studentExists)
             {
                 return NotFound(new { message = $"El estudiante con ID {studentId} no existe en el sistema." });
             }
 
-            // 2. Obtener las habilidades que este estudiante OFRECE
             var myOffers = await _context.Offers
                 .Where(o => o.StudentId == studentId && o.IsActive)
                 .Select(o => o.SkillId)
                 .ToListAsync();
 
-            // 3. Obtener las habilidades que este estudiante QUIERE APRENDER (Requests)
             var myRequests = await _context.Requests
                 .Where(r => r.StudentId == studentId && r.IsActive)
                 .Select(r => r.SkillId)
                 .ToListAsync();
 
-            // 4. Buscar estudiantes compatibles (Match Cruzado)
             var matches = await _context.Students
                 .Include(s => s.User)
                 .Where(s => s.Id != studentId)
@@ -60,11 +79,10 @@ namespace SkillSwap.API.Controllers
             return Ok(matches);
         }
 
-        // POST: api/Exchanges (Proponer un intercambio formal)
+        // POST: api/Exchanges (Proponer intercambio formal)
         [HttpPost]
         public async Task<ActionResult<Exchange>> PostExchange(Exchange exchange)
         {
-            // VALIDACIÓN DE IDs: Verificar que ambos estudiantes existan
             var initiatorExists = await _context.Students.AnyAsync(s => s.Id == exchange.InitiatorStudentId);
             var receiverExists = await _context.Students.AnyAsync(s => s.Id == exchange.ReceiverStudentId);
 
@@ -84,7 +102,32 @@ namespace SkillSwap.API.Controllers
             _context.Exchanges.Add(exchange);
             await _context.SaveChangesAsync();
 
-            return Ok(exchange);
+            return CreatedAtAction(nameof(GetExchange), new { id = exchange.Id }, exchange);
+        }
+
+        // PUT: api/Exchanges/5 (Actualizar estado, calificación o feedback)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutExchange(int id, Exchange exchange)
+        {
+            if (id != exchange.Id) return BadRequest(new { message = "El ID no coincide." });
+
+            _context.Entry(exchange).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/Exchanges/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExchange(int id)
+        {
+            var exchange = await _context.Exchanges.FindAsync(id);
+            if (exchange == null) return NotFound(new { message = "Intercambio no encontrado." });
+
+            _context.Exchanges.Remove(exchange);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

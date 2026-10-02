@@ -24,6 +24,13 @@ namespace SkillSwap.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // --- SEMILLA DE DATOS PARA LOS ROLES ---
+            modelBuilder.Entity<Role>().HasData(
+                new Role { Id = 1, Name = "Master" },
+                new Role { Id = 2, Name = "Technical" },
+                new Role { Id = 3, Name = "Student" }
+            );
+
             modelBuilder.Entity<UserRoles>()
                 .HasKey(ur => new { ur.UserId, ur.RoleId });
 

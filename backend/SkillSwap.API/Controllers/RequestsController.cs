@@ -16,7 +16,7 @@ namespace SkillSwap.API.Controllers
             _context = context;
         }
 
-        // GET: api/Requests (Filtros por Habilidad o Categoría)
+        // GET: api/Requests (Listar y filtrar)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetRequests([FromQuery] string? skillName, [FromQuery] string? category)
         {
@@ -39,39 +39,69 @@ namespace SkillSwap.API.Controllers
             var results = await query.Select(r => new {
                 r.Id,
                 r.Notes,
+                r.IsActive,
                 StudentId = r.Student.Id,
                 StudentName = r.Student.User.FirstName + " " + r.Student.User.LastName,
-                StudentEmail = r.Student.User.Email,
                 SkillId = r.Skill.Id,
                 SkillName = r.Skill.Name,
-                r.Skill.Category
+                oCategory = r.Skill.Category
             }).ToListAsync();
 
             return Ok(results);
         }
 
-        // POST: api/Requests (Con validación de existencia de IDs)
+        // GET: api/Requests/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRequest(int id)
+        {
+            var request = await _context.Requests
+                .Include(r => r.Student).ThenInclude(s => s.User)
+                .Include(r => r.Skill)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (request == null) return NotFound(new { message = "Solicitud no encontrada." });
+            return Ok(request);
+        }
+
+        // POST: api/Requests (Crear con validaciones)
         [HttpPost]
         public async Task<ActionResult<Request>> PostRequest(Request request)
         {
-            // VALIDACIÓN DE ID: Verificar que el estudiante exista
             var studentExists = await _context.Students.AnyAsync(s => s.Id == request.StudentId);
-            if (!studentExists)
-            {
-                return BadRequest(new { message = $"El Estudiante con ID {request.StudentId} no existe." });
-            }
+            if (!studentExists) return BadRequest(new { message = "El Estudiante especificado no existe." });
 
-            // VALIDACIÓN DE ID: Verificar que la habilidad exista
             var skillExists = await _context.Skills.AnyAsync(s => s.Id == request.SkillId);
-            if (!skillExists)
-            {
-                return BadRequest(new { message = $"La Habilidad con ID {request.SkillId} no existe en el catálogo." });
-            }
+            if (!skillExists) return BadRequest(new { message = "La Habilidad especificada no existe." });
 
             _context.Requests.Add(request);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetRequests), new { id = request.Id }, request);
+            return CreatedAtAction(nameof(GetRequest), new { id = request.Id }, request);
+        }
+
+        // PUT: api/Requests/5 (Actualizar)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutRequest(int id, Request request)
+        {
+            if (id != request.Id) return BadRequest(new { message = "El ID no coincide." });
+
+            _context.Entry(request).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/Requests/5 (Eliminar)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRequest(int id)
+        {
+            var request = await _context.Requests.FindAsync(id);
+            if (request == null) return NotFound(new { message = "Solicitud no encontrada." });
+
+            _context.Requests.Remove(request);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
