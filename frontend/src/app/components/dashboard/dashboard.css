@@ -1,0 +1,393 @@
+body {
+  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.bi-dashboard-container {
+  padding: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* Cabecera oscura con acentos fucsia */
+.bi-header {
+  background-color: #1a1e24;
+  color: #ffffff;
+  padding: 18px 25px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.bi-title-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-badge-exec {
+  font-size: 26px;
+  background: #ff3838;
+  color: white;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 56, 56, 0.4);
+}
+
+.bi-title-section h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.bi-title-section p {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #a4b0be;
+}
+
+.bi-top-controls {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.filter-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filter-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #a4b0be;
+  font-weight: bold;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 6px;
+}
+
+.pill {
+  background: #2f3542;
+  color: #a4b0be;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pill.active-pill {
+  background: #ff3838;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(255, 56, 56, 0.4);
+}
+
+.btn-logout-exec {
+  background-color: #ff4757;
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.btn-logout-exec:hover {
+  background-color: #ff3838;
+}
+
+/* Fila Superior de KPIs */
+.bi-kpi-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.kpi-box {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  border-top: 4px solid #1a1e24;
+}
+
+.main-kpi {
+  border-top-color: #ff3838;
+}
+
+.kpi-icon-container {
+  font-size: 30px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.percentage-circle {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.pink-circle {
+  background: #ffe2e5;
+  color: #ff3838;
+  border: 3px solid #ff3838;
+}
+
+.teal-circle {
+  background: #e0fcf9;
+  color: #00b894;
+  border: 3px solid #00b894;
+}
+
+.kpi-data h2 {
+  margin: 0;
+  font-size: 26px;
+  color: #2f3542;
+  font-weight: 700;
+}
+
+.kpi-data h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #2f3542;
+  font-weight: 600;
+}
+
+.kpi-data p {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #747d8c;
+}
+
+/* Cuadrícula Principal */
+.bi-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1.3fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.bi-card {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.bi-card h3 {
+  margin-top: 0;
+  font-size: 15px;
+  color: #2f3542;
+  border-bottom: 2px solid #f1f2f6;
+  padding-bottom: 12px;
+  font-weight: 600;
+}
+
+.metric-row-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #f1f2f6;
+  font-size: 13px;
+  color: #57606f;
+}
+
+.badge-teal {
+  background: #00b894;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.badge-dark {
+  background: #2f3542;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.sub-header-title {
+  margin: 18px 0 8px 0;
+  font-size: 11px;
+  font-weight: bold;
+  color: #747d8c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.clean-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.clean-list li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 7px 0;
+  border-bottom: 1px dashed #dfe4ea;
+  color: #57606f;
+}
+
+.bottom-metric-highlight {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 18px;
+  text-align: center;
+  border-left: 4px solid #ff3838;
+}
+
+.bottom-metric-highlight p {
+  margin: 0;
+  font-size: 11px;
+  color: #747d8c;
+}
+
+.bottom-metric-highlight h2 {
+  margin: 4px 0 0 0;
+  color: #2f3542;
+  font-size: 20px;
+}
+
+/* Barras de Progreso Estilo BI */
+.bar-progress-container {
+  margin-bottom: 14px;
+}
+
+.bar-label {
+  font-size: 12px;
+  color: #57606f;
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.bar-track {
+  background: #f1f2f6;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+}
+
+.bar-fill {
+  background: #ff3838;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.bar-value {
+  font-size: 11px;
+  color: #747d8c;
+  font-weight: bold;
+  float: right;
+  margin-top: 2px;
+}
+
+/* Tarjetas de Estado y Roles */
+.welcome-msg {
+  font-size: 13px;
+  color: #57606f;
+  line-height: 1.5;
+}
+
+.student-stats-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.mini-stat-card {
+  background: #f8f9fa;
+  flex: 1;
+  padding: 14px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #e1e4e8;
+}
+
+.mini-stat-card h4 {
+  margin: 0;
+  font-size: 11px;
+  color: #747d8c;
+  text-transform: uppercase;
+}
+
+.mini-stat-card p {
+  margin: 6px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #0984e3;
+}
+
+.mini-status-box {
+  background: #e8f8f5;
+  padding: 12px 15px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  border-left: 4px solid #00b894;
+  margin-top: 8px;
+}
+
+.text-success {
+  color: #00b894;
+  font-weight: bold;
+}
+
+.hint-text {
+  font-size: 12px;
+  color: #747d8c;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+/* Pie de Página */
+.bi-footer-exec {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 11px;
+  color: #747d8c;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+@media (max-width: 1100px) {
+  .bi-main-grid { grid-template-columns: 1fr; }
+  .bi-kpi-grid { grid-template-columns: 1fr; }
+}

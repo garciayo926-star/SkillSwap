@@ -1,0 +1,159 @@
+<div class="bi-dashboard-container">
+  
+  <!-- BARRA SUPERIOR EJECUTIVA -->
+  <header class="bi-header">
+    <div class="bi-title-section">
+      <div class="logo-badge-exec">🔄</div>
+      <div>
+        <h1>Dashboard - Análisis de Operaciones SkillSwap</h1>
+        <p>Indicadores Preliminares Intervinientes en el Sistema (Rol: {{ userRole }})</p>
+      </div>
+    </div>
+    
+    <div class="bi-top-controls">
+      <div class="filter-block">
+        <span class="filter-title">Filtro por Rol</span>
+        <div class="filter-pills">
+          <span class="pill" [class.active-pill]="isMaster">Master</span>
+          <span class="pill" [class.active-pill]="isTechnical">Técnico</span>
+          <span class="pill" [class.active-pill]="isStudent">Estudiante</span>
+        </div>
+      </div>
+      <button (click)="logout()" class="btn-logout-exec">Cerrar Sesión</button>
+    </div>
+  </header>
+
+  <!-- TARJETAS DE INDICADORES SUPERIORES (KPIS CON CÍRCULOS DE PORCENTAJE) -->
+  <section class="bi-kpi-grid">
+    
+    <!-- Tarjeta Total Usuarios -->
+    <div class="kpi-box main-kpi">
+      <div class="kpi-icon-container">👥</div>
+      <div class="kpi-data">
+        <h2>9,790</h2>
+        <p>Usuarios Totales en la Red</p>
+      </div>
+    </div>
+
+    <!-- Tarjeta Inactividad / Tasa -->
+    <div class="kpi-box">
+      <div class="percentage-circle pink-circle">36%</div>
+      <div class="kpi-data">
+        <h3>Tasa de Inactividad</h3>
+        <p>Cuentas Sin Intercambio: 3,484</p>
+      </div>
+    </div>
+
+    <!-- Tarjeta Fuerza Activa -->
+    <div class="kpi-box">
+      <div class="percentage-circle teal-circle">64%</div>
+      <div class="kpi-data">
+        <h3>Fuerza Activa en Intercambios</h3>
+        <p>Número de Activos: 6,306</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CUADRÍCULA PRINCIPAL DE PANELES ANALÍTICOS -->
+  <section class="bi-main-grid">
+    
+    <!-- COLUMNA IZQUIERDA: CATEGORÍAS Y MOTIVOS -->
+    <div class="bi-card">
+      <h3>Habilidades Populares</h3>
+      <div class="metric-row-badge">
+        <span>Desarrollo Software (Java / .NET)</span>
+        <span class="badge-teal">2,291</span>
+      </div>
+      <div class="metric-row-badge">
+        <span>Diseño & Multimedia</span>
+        <span class="badge-dark">1,193</span>
+      </div>
+
+      <div class="sub-header-title">Motivo de Intercambio Destacado</div>
+      <ul class="clean-list">
+        <li><span>Programación Avanzada</span> <b>328</b></li>
+        <li><span>Bases de Datos SQL</span> <b>970</b></li>
+        <li><span>Soporte Técnico</span> <b>33</b></li>
+        <li><span>Inglés Conversacional</span> <b>2,153</b></li>
+      </ul>
+
+      <div class="bottom-metric-highlight">
+        <p>Promedio de Solicitudes por Usuario</p>
+        <h2>155 📊</h2>
+      </div>
+    </div>
+
+    <!-- COLUMNA CENTRAL: DESGLOSE POR TIPO DE ROL O SISTEMA -->
+    <div class="bi-card">
+      <h3>Desglose de Usuarios por Perfil</h3>
+      <div class="bar-progress-container" *ngFor="let item of [
+        {name: 'Estudiantes Activos', count: '115 Retiros', width: '85%'},
+        {name: 'Soporte Técnico', count: '7 Retiros', width: '45%'},
+        {name: 'Administradores Master', count: '3 Retiros', width: '20%'},
+        {name: 'Nuevos Registros Mes', count: '48 Retiros', width: '60%'}
+      ]">
+        <span class="bar-label">{{ item.name }}</span>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width]="item.width"></div>
+        </div>
+        <span class="bar-value">{{ item.count }}</span>
+      </div>
+
+      <div class="sub-header-title" style="margin-top: 25px;">Indicador de Rendimiento de API</div>
+      <div class="mini-status-box">
+        <span>Conexión PostgreSQL (.NET Backend)</span>
+        <b class="text-success">100% Operativo</b>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: VISTA ADAPTATIVA SEGÚN ROL (ESTUDIANTE O MASTER) -->
+    <div class="bi-card">
+      <h3>Panel de Control Personalizado</h3>
+      
+      <!-- Vista para Estudiante -->
+      <div *ngIf="isStudent" class="role-specific-view">
+        <p class="welcome-msg">Bienvenido, <b>{{ username }}</b>. Estás conectado al núcleo de intercambios de SkillSwap.</p>
+        <div class="student-stats-row">
+          <div class="mini-stat-card">
+            <h4>Mis Ofertas</h4>
+            <p>2 Activas</p>
+          </div>
+          <div class="mini-stat-card">
+            <h4>Intercambios</h4>
+            <p>5 Realizados</p>
+          </div>
+        </div>
+        <div class="sub-header-title">Sugerencias para ti</div>
+        <p class="hint-text">Explora las categorías disponibles para iniciar un nuevo intercambio de conocimientos técnicos hoy.</p>
+      </div>
+
+      <!-- Vista para Master / Technical -->
+      <div *ngIf="!isStudent" class="role-specific-view">
+        <p class="welcome-msg">Supervisión gerencial para el usuario <b>{{ username }}</b>.</p>
+        <div class="student-stats-row">
+          <div class="mini-stat-card">
+            <h4>Solicitudes Pendientes</h4>
+            <p style="color: #ff4757;">32 Por Revisar</p>
+          </div>
+          <div class="mini-stat-card">
+            <h4>Seguridad RBAC</h4>
+            <p style="color: #2ed573;">Protegido</p>
+          </div>
+        </div>
+        <div class="sub-header-title">Estado de Servidores</div>
+        <div class="mini-status-box">
+          <span>Puerto API .NET (5066)</span>
+          <b class="text-success">En Línea</b>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="bi-footer-exec">
+    <p>Este <b>Dashboard</b> se fundamenta en una fuente de datos en tiempo real de <b>SkillSwap</b> y representa una aproximación ejecutiva a casos del mundo real.</p>
+  </footer>
+
+</div>
