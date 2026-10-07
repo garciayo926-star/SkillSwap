@@ -1,0 +1,133 @@
+<div class="ss-page">
+
+  <!-- CABECERA -->
+  <header class="ss-page-header">
+    <div>
+      <h1>🎓 Gestión de Estudiantes</h1>
+      <p>Perfiles registrados, sus habilidades ofrecidas y solicitadas</p>
+    </div>
+    <button class="ss-btn ss-btn-primary" (click)="openCreate()">+ Nuevo Estudiante</button>
+  </header>
+
+  <!-- MENSAJES -->
+  <div *ngIf="errorMessage()" class="ss-alert ss-alert-error">{{ errorMessage() }}</div>
+  <div *ngIf="successMessage()" class="ss-alert ss-alert-success">{{ successMessage() }}</div>
+
+  <!-- FORMULARIO -->
+  <section *ngIf="showForm" class="ss-card">
+    <h3>{{ editingId ? 'Editar Estudiante' : 'Nuevo Estudiante' }}</h3>
+    <form (ngSubmit)="save()">
+      <div class="ss-form-grid">
+        <div class="ss-field">
+          <label>Nombre de usuario</label>
+          <input type="text" [(ngModel)]="form.username" name="username" required />
+        </div>
+        <div class="ss-field">
+          <label>Correo electrónico</label>
+          <input type="email" [(ngModel)]="form.email" name="email" required />
+        </div>
+        <div class="ss-field" *ngIf="!editingId">
+          <label>Contraseña</label>
+          <input type="password" [(ngModel)]="form.password" name="password" required />
+        </div>
+        <div class="ss-field">
+          <label>Nombre</label>
+          <input type="text" [(ngModel)]="form.firstName" name="firstName" required />
+        </div>
+        <div class="ss-field">
+          <label>Apellido</label>
+          <input type="text" [(ngModel)]="form.lastName" name="lastName" required />
+        </div>
+      </div>
+      <div class="ss-field bio-field">
+        <label>Biografía</label>
+        <textarea [(ngModel)]="form.bio" name="bio" placeholder="¿Qué ofrece o busca?"></textarea>
+      </div>
+      <label *ngIf="editingId" class="ss-checkbox">
+        <input type="checkbox" [(ngModel)]="form.isActive" name="isActive" />
+        Cuenta activa
+      </label>
+      <div class="ss-form-actions">
+        <button type="button" class="ss-btn ss-btn-light" (click)="resetForm()">Cancelar</button>
+        <button type="submit" class="ss-btn ss-btn-success">Guardar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- FILTROS -->
+  <section class="ss-card">
+    <h3>Filtros</h3>
+    <div class="ss-filters">
+      <div class="ss-field">
+        <label>Nombre o usuario</label>
+        <input type="text" [(ngModel)]="nameFilter" (keyup.enter)="loadStudents()" placeholder="Ej: María" />
+      </div>
+      <div class="ss-field">
+        <label>Habilidad ofrecida o solicitada</label>
+        <input type="text" [(ngModel)]="skillFilter" (keyup.enter)="loadStudents()" placeholder="Ej: Photoshop" />
+      </div>
+      <button class="ss-btn" (click)="loadStudents()">Buscar</button>
+      <button class="ss-btn ss-btn-light" (click)="clearFilters()">Limpiar</button>
+    </div>
+  </section>
+
+  <!-- LISTADO -->
+  <section class="ss-card">
+    <h3>Estudiantes registrados ({{ students().length }})</h3>
+
+    <div *ngIf="loading()" class="ss-empty">Cargando...</div>
+    <div *ngIf="!loading() && students().length === 0" class="ss-empty">No se encontraron estudiantes.</div>
+
+    <div *ngIf="!loading() && students().length > 0" class="ss-table-wrapper">
+      <table class="ss-table">
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Ofrece</th>
+            <th>Quiere aprender</th>
+            <th>Intercambios</th>
+            <th>Estado</th>
+            <th *ngIf="isMaster">Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of students()">
+            <td>
+              <strong>{{ s.fullName }}</strong>
+              <div class="ss-muted">&#64;{{ s.username }} · {{ s.email }}</div>
+            </td>
+            <td>
+              <span *ngFor="let skill of s.offeredSkills" class="ss-chip">{{ skill }}</span>
+              <span *ngIf="s.offeredSkills.length === 0" class="ss-muted">—</span>
+            </td>
+            <td>
+              <span *ngFor="let skill of s.requestedSkills" class="ss-chip">{{ skill }}</span>
+              <span *ngIf="s.requestedSkills.length === 0" class="ss-muted">—</span>
+            </td>
+            <td>{{ s.exchangesCount }}</td>
+            <td>
+              <span class="ss-badge" [class.ss-badge-teal]="s.isActive" [class.ss-badge-gray]="!s.isActive">
+                {{ s.isActive ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td *ngIf="isMaster">
+              <div class="ss-field">
+                <select [ngModel]="roleOf(s.userId)" (ngModelChange)="changeRole(s, $event)">
+                  <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="ss-actions">
+                <button class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(s)">Editar</button>
+                <button class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(s)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,869 @@
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.auth-container {
+  position: relative;
+
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 25% 50%,
+      rgba(255, 190, 60, 0.04),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #111722 0%,
+      #0b1019 50%,
+      #080c13 100%
+    );
+
+  transition:
+    background 1s ease;
+}
+
+
+/* =========================================================
+   ILUMINACIÓN CUANDO SE ENCIENDE LA LÁMPARA
+   ========================================================= */
+
+.auth-container.light-on {
+
+  background:
+    radial-gradient(
+      circle at 25% 50%,
+      rgba(255, 190, 70, 0.20),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 45% 50%,
+      rgba(255, 180, 50, 0.06),
+      transparent 40%
+    ),
+    linear-gradient(
+      135deg,
+      #111722 0%,
+      #090e17 55%,
+      #060a10 100%
+    );
+}
+
+
+/* =========================================================
+   LÁMPARA
+   ========================================================= */
+
+.lamp-container {
+
+  position: absolute;
+
+  left: 8%;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 300px;
+  height: 400px;
+
+  z-index: 10;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.4s ease;
+}
+
+
+/* Movimiento sutil al pasar el mouse */
+
+.lamp-container:hover {
+
+  transform:
+    translateY(-50%)
+    scale(1.03);
+}
+
+
+/* =========================================================
+   CABLE
+   ========================================================= */
+
+.lamp-cable {
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  width: 5px;
+  height: 100px;
+
+  transform: translateX(-50%);
+
+  background: #080808;
+
+  border-radius: 3px;
+
+  box-shadow:
+    0 0 3px rgba(0,0,0,0.8);
+}
+
+
+/* =========================================================
+   SOPORTE SUPERIOR
+   ========================================================= */
+
+.lamp-holder {
+
+  position: absolute;
+
+  top: 92px;
+  left: 50%;
+
+  width: 70px;
+  height: 35px;
+
+  transform: translateX(-50%);
+
+  border-radius: 8px 8px 3px 3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2c2c2c,
+      #111,
+      #333
+    );
+
+  box-shadow:
+    0 5px 12px rgba(0,0,0,0.5);
+}
+
+
+/* =========================================================
+   PANTALLA DE LA LÁMPARA
+   ========================================================= */
+
+.lamp-shade {
+
+  position: absolute;
+
+  top: 115px;
+  left: 50%;
+
+  width: 230px;
+  height: 130px;
+
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      145deg,
+      #20242c,
+      #080a0e
+    );
+
+  border-radius:
+    120px 120px 35px 35px;
+
+  box-shadow:
+
+    inset
+    -10px -8px 20px rgba(0,0,0,0.7),
+
+    inset
+    8px 8px 15px rgba(255,255,255,0.05),
+
+    0 18px 30px rgba(0,0,0,0.55);
+
+  transition:
+    box-shadow 0.6s ease;
+}
+
+
+/* =========================================================
+   BORDE INFERIOR DE LA PANTALLA
+   ========================================================= */
+
+.lamp-shade::after {
+
+  content: "";
+
+  position: absolute;
+
+  bottom: -7px;
+  left: 50%;
+
+  width: 245px;
+  height: 25px;
+
+  transform: translateX(-50%);
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      180deg,
+      #16191e,
+      #050607
+    );
+
+  box-shadow:
+    0 5px 8px rgba(0,0,0,0.6);
+}
+
+
+/* =========================================================
+   BOMBILLA
+   ========================================================= */
+
+.lamp-bulb {
+
+  position: absolute;
+
+  left: 50%;
+  bottom: 8px;
+
+  width: 58px;
+  height: 58px;
+
+  transform: translateX(-50%);
+
+  border-radius: 50%;
+
+  background: #272a2f;
+
+  transition:
+    background 0.6s ease,
+    box-shadow 0.6s ease;
+}
+
+
+/* =========================================================
+   EFECTO HOVER
+   ========================================================= */
+
+.lamp-container:hover .lamp-bulb {
+
+  background: #464950;
+
+  box-shadow:
+
+    0 0 15px rgba(255,220,120,0.25),
+
+    0 0 35px rgba(255,200,70,0.12);
+}
+
+
+/* =========================================================
+   LÁMPARA ENCENDIDA
+   ========================================================= */
+
+.light-on .lamp-bulb {
+
+  background: #fff9d6;
+
+  box-shadow:
+
+    0 0 12px rgba(255,250,210,1),
+
+    0 0 30px rgba(255,225,110,0.95),
+
+    0 0 60px rgba(255,200,60,0.85),
+
+    0 0 100px rgba(255,175,30,0.55);
+}
+
+
+/* =========================================================
+   PANTALLA ENCENDIDA
+   ========================================================= */
+
+.light-on .lamp-shade {
+
+  box-shadow:
+
+    inset
+    -10px -8px 20px rgba(0,0,0,0.7),
+
+    0 0 30px rgba(255,210,90,0.15);
+}
+
+
+/* =========================================================
+   HAZ DE LUZ
+   ========================================================= */
+
+.lamp-light {
+
+  position: absolute;
+
+  top: 238px;
+  left: 50%;
+
+  width: 330px;
+  height: 360px;
+
+  transform:
+    translateX(-50%);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,205,90,0.25),
+      rgba(255,190,50,0.08),
+      transparent
+    );
+
+  clip-path: polygon(
+    36% 0%,
+    64% 0%,
+    100% 100%,
+    0% 100%
+  );
+
+  filter: blur(3px);
+
+  transition:
+    opacity 0.8s ease;
+}
+
+
+/* HAZ APARECE AL ENCENDER */
+
+.light-on .lamp-light {
+
+  opacity: 1;
+}
+
+
+/* =========================================================
+   TARJETA
+   ========================================================= */
+
+.auth-card {
+
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+  max-width: 430px;
+
+  margin-left: 260px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  background: rgba(255,255,255,0.98);
+
+  border-radius: 18px;
+
+  box-shadow:
+
+    0 25px 60px rgba(0,0,0,0.45),
+
+    0 5px 20px rgba(0,0,0,0.15);
+
+  opacity: 0;
+
+  transform:
+    translateX(40px)
+    scale(0.97);
+
+  pointer-events: none;
+
+  transition:
+
+    opacity 0.7s ease,
+
+    transform 0.7s ease;
+}
+
+
+/* =========================================================
+   TARJETA VISIBLE
+   ========================================================= */
+
+.auth-card.show-card {
+
+  opacity: 1;
+
+  transform:
+    translateX(0)
+    scale(1);
+
+  pointer-events: auto;
+}
+
+
+/* =========================================================
+   MARCA
+   ========================================================= */
+
+.brand {
+
+  text-align: center;
+
+  margin-bottom: 24px;
+}
+
+
+.brand-icon {
+
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 10px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8ec5b4,
+      #a7d5c8
+    );
+
+  font-size: 26px;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.12);
+}
+
+
+.brand h1 {
+
+  margin: 0;
+
+  color: #2c3e50;
+
+  font-size: 31px;
+
+  font-weight: 700;
+}
+
+
+.brand h1 span {
+
+  color: #3498db;
+}
+
+
+.brand p {
+
+  margin-top: 5px;
+
+  color: #7f8c8d;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   PESTAÑAS
+   ========================================================= */
+
+.tab-buttons {
+
+  display: flex;
+
+  margin-bottom: 24px;
+
+  border-bottom:
+    2px solid #eeeeee;
+}
+
+
+.tab-buttons button {
+
+  flex: 1;
+
+  padding: 11px;
+
+  background: transparent;
+
+  border: none;
+
+  color: #7f8c8d;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 0.3s ease;
+}
+
+
+.tab-buttons button:hover {
+
+  color: #3498db;
+}
+
+
+.tab-buttons button.active {
+
+  color: #3498db;
+
+  border-bottom:
+    2px solid #3498db;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.form-group {
+
+  margin-bottom: 15px;
+}
+
+
+.form-group label {
+
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #34495e;
+
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   INPUT CON ICONO
+   ========================================================= */
+
+.input-container {
+
+  position: relative;
+}
+
+
+.input-icon {
+
+  position: absolute;
+
+  left: 15px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #7f8c8d;
+
+  font-size: 16px;
+
+  z-index: 2;
+}
+
+
+.input-container input {
+
+  padding-left: 42px;
+}
+
+.input-container input.no-icon-input {
+  padding-left: 14px !important; /* Quita el espacio reservado para el icono en estos campos */
+}
+
+/* =========================================================
+   CONTENEDOR DEL INPUT E ICONO
+   ========================================================= */
+
+.input-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7f8c8d;
+  font-size: 15px;
+  pointer-events: none; /* Evita que el icono bloquee el clic en el input */
+  z-index: 2;
+}
+
+.input-container input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px 12px 42px; /* Deja espacio a la izquierda para que el texto no pise el icono */
+  border: 1px solid #d5dce2;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #34495e;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* =========================================================
+   NOMBRE / APELLIDO
+   ========================================================= */
+
+.form-row {
+
+  display: flex;
+
+  gap: 10px;
+}
+
+
+.form-row .form-group {
+
+  flex: 1;
+}
+
+
+/* =========================================================
+   OPCIONES LOGIN
+   ========================================================= */
+
+.login-options {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin: 5px 0 15px;
+
+  font-size: 12px;
+}
+
+
+.remember {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #7f8c8d;
+}
+
+
+.login-options a {
+
+  color: #3498db;
+
+  text-decoration: none;
+}
+
+
+.login-options a:hover {
+
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   BOTÓN
+   ========================================================= */
+
+.btn-submit {
+
+  width: 100%;
+
+  padding: 13px;
+
+  margin-top: 8px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3498db,
+      #2980b9
+    );
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 18px rgba(52,152,219,0.25);
+
+  transition:
+
+    transform 0.2s ease,
+
+    box-shadow 0.2s ease;
+}
+
+
+.btn-submit:hover {
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 12px 24px rgba(52,152,219,0.35);
+}
+
+
+.btn-submit:active {
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================================================
+   ALERTAS
+   ========================================================= */
+
+.alert {
+
+  padding: 10px;
+
+  margin-bottom: 15px;
+
+  border-radius: 6px;
+
+  text-align: center;
+
+  font-size: 13px;
+}
+
+
+.alert.error {
+
+  background: #fadbd8;
+
+  color: #c0392b;
+}
+
+
+.alert.success {
+
+  background: #d4efdf;
+
+  color: #27ae60;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .lamp-container {
+
+    left: 5%;
+
+    transform:
+      translateY(-50%)
+      scale(0.8);
+  }
+
+  .lamp-container:hover {
+
+    transform:
+      translateY(-50%)
+      scale(0.83);
+  }
+
+  .auth-card {
+
+    margin-left: 180px;
+
+    max-width: 420px;
+  }
+}
+
+
+@media (max-width: 700px) {
+
+  .auth-container {
+
+    padding: 30px 15px;
+
+    align-items: center;
+  }
+
+  .lamp-container {
+
+    position: absolute;
+
+    top: 15px;
+    left: 50%;
+
+    transform:
+      translateX(-50%)
+      scale(0.45);
+
+    transform-origin: top center;
+  }
+
+  .lamp-container:hover {
+
+    transform:
+      translateX(-50%)
+      scale(0.48);
+  }
+
+  .auth-card {
+
+    margin-left: 0;
+
+    margin-top: 100px;
+
+    max-width: 430px;
+
+    padding: 25px;
+  }
+
+  .form-row {
+
+    flex-direction: column;
+
+    gap: 0;
+  }
+
+  .lamp-light {
+
+    display: none;
+  }
+}

@@ -1,0 +1,35 @@
+<div class="layout-container">
+
+  <!-- MENÚ LATERAL -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-badge">🔄</div>
+      <h2>Skill<span>Swap</span></h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a *ngFor="let item of visibleItems"
+         [routerLink]="item.path"
+         routerLinkActive="active-link"
+         class="nav-link">
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar">{{ username.charAt(0).toUpperCase() }}</div>
+      <div class="user-data">
+        <strong>{{ username }}</strong>
+        <span>{{ userRole }}</span>
+      </div>
+      <button class="btn-logout-side" (click)="logout()" title="Cerrar Sesión">⏻</button>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO DE CADA PÁGINA -->
+  <main class="layout-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

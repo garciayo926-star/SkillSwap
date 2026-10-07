@@ -1,0 +1,131 @@
+<div class="ss-page">
+
+  <!-- CABECERA -->
+  <header class="ss-page-header">
+    <div>
+      <h1>🎁 Ofertas de Habilidades</h1>
+      <p>Lo que cada estudiante sabe hacer y está dispuesto a enseñar</p>
+    </div>
+    <button *ngIf="isAdmin || myStudentId" class="ss-btn ss-btn-primary" (click)="openCreate()">+ Nueva Oferta</button>
+  </header>
+
+  <!-- MENSAJES -->
+  <div *ngIf="errorMessage()" class="ss-alert ss-alert-error">{{ errorMessage() }}</div>
+  <div *ngIf="successMessage()" class="ss-alert ss-alert-success">{{ successMessage() }}</div>
+
+  <!-- FORMULARIO -->
+  <section *ngIf="showForm" class="ss-card">
+    <h3>{{ editingId ? 'Editar Oferta' : 'Nueva Oferta' }}</h3>
+    <form (ngSubmit)="save()">
+      <div class="ss-form-grid">
+        <div class="ss-field" *ngIf="isAdmin">
+          <label>Estudiante</label>
+          <select [(ngModel)]="form.studentId" name="studentId" required>
+            <option [ngValue]="null" disabled>Selecciona un estudiante</option>
+            <option *ngFor="let s of students()" [ngValue]="s.id">{{ s.fullName }}</option>
+          </select>
+        </div>
+        <div class="ss-field">
+          <label>Habilidad que ofrezco</label>
+          <select [(ngModel)]="form.skillId" name="skillId" required>
+            <option [ngValue]="null" disabled>Selecciona una habilidad</option>
+            <option *ngFor="let sk of skills()" [ngValue]="sk.id">{{ sk.name }} ({{ sk.category }})</option>
+          </select>
+        </div>
+      </div>
+      <div class="ss-field desc-field">
+        <label>Descripción</label>
+        <textarea [(ngModel)]="form.description" name="description" placeholder="Ej: Enseño Photoshop básico y retoque de fotos"></textarea>
+      </div>
+      <label class="ss-checkbox">
+        <input type="checkbox" [(ngModel)]="form.isActive" name="isActive" />
+        Oferta activa
+      </label>
+      <p class="ss-muted">¿No encuentras la habilidad? Créala primero en la sección Habilidades.</p>
+      <div class="ss-form-actions">
+        <button type="button" class="ss-btn ss-btn-light" (click)="resetForm()">Cancelar</button>
+        <button type="submit" class="ss-btn ss-btn-success">Guardar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- FILTROS -->
+  <section class="ss-card">
+    <h3>Filtros</h3>
+    <div class="ss-filters">
+      <div class="ss-field">
+        <label>Habilidad</label>
+        <input type="text" [(ngModel)]="skillNameFilter" (keyup.enter)="loadOffers()" placeholder="Ej: Python" />
+      </div>
+      <div class="ss-field">
+        <label>Categoría</label>
+        <select [(ngModel)]="categoryFilter" (change)="loadOffers()">
+          <option value="">Todas</option>
+          <option *ngFor="let c of categories()" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+      <div class="ss-field" *ngIf="isAdmin">
+        <label>Estudiante</label>
+        <select [(ngModel)]="studentFilter" (ngModelChange)="loadOffers()">
+          <option [ngValue]="null">Todos</option>
+          <option *ngFor="let s of students()" [ngValue]="s.id">{{ s.fullName }}</option>
+        </select>
+      </div>
+      <button class="ss-btn" (click)="loadOffers()">Buscar</button>
+      <button class="ss-btn ss-btn-light" (click)="clearFilters()">Limpiar</button>
+    </div>
+    <div class="toggles">
+      <label *ngIf="!isAdmin && myStudentId" class="ss-checkbox">
+        <input type="checkbox" [(ngModel)]="onlyMine" (ngModelChange)="loadOffers()" />
+        Ver solo mis ofertas
+      </label>
+      <label class="ss-checkbox">
+        <input type="checkbox" [(ngModel)]="includeInactive" (ngModelChange)="loadOffers()" />
+        Incluir inactivas
+      </label>
+    </div>
+  </section>
+
+  <!-- LISTADO -->
+  <section class="ss-card">
+    <h3>{{ onlyMine ? 'Mis ofertas' : 'Ofertas publicadas' }} ({{ offers().length }})</h3>
+
+    <div *ngIf="loading()" class="ss-empty">Cargando...</div>
+    <div *ngIf="!loading() && offers().length === 0" class="ss-empty">No se encontraron ofertas.</div>
+
+    <div *ngIf="!loading() && offers().length > 0" class="ss-table-wrapper">
+      <table class="ss-table">
+        <thead>
+          <tr>
+            <th>Habilidad</th>
+            <th>Categoría</th>
+            <th>Estudiante</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let o of offers()">
+            <td><strong>{{ o.skillName }}</strong></td>
+            <td><span class="ss-chip">{{ o.category }}</span></td>
+            <td>{{ o.studentName }}</td>
+            <td>{{ o.description || '—' }}</td>
+            <td>
+              <span class="ss-badge" [class.ss-badge-teal]="o.isActive" [class.ss-badge-gray]="!o.isActive">
+                {{ o.isActive ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+            <td>
+              <div class="ss-actions" *ngIf="canManage(o)">
+                <button class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(o)">Editar</button>
+                <button class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(o)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>

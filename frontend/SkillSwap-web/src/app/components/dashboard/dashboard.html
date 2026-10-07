@@ -1,0 +1,188 @@
+<div class="bi-dashboard-container">
+
+  <!-- BARRA SUPERIOR EJECUTIVA -->
+  <header class="bi-header">
+    <div class="bi-title-section">
+      <div class="logo-badge-exec">🔄</div>
+      <div>
+        <h1>Dashboard - Análisis de Operaciones SkillSwap</h1>
+        <p>Indicadores Preliminares Intervinientes en el Sistema (Rol: {{ userRole }})</p>
+      </div>
+    </div>
+
+    <div class="bi-top-controls">
+      <div class="filter-block">
+        <span class="filter-title">Filtro por Rol</span>
+        <div class="filter-pills">
+          <span class="pill" [class.active-pill]="isMaster">Master</span>
+          <span class="pill" [class.active-pill]="isTechnical">Técnico</span>
+          <span class="pill" [class.active-pill]="isStudent">Estudiante</span>
+        </div>
+      </div>
+      <button (click)="logout()" class="btn-logout-exec">Cerrar Sesión</button>
+    </div>
+  </header>
+
+  <div *ngIf="errorMessage()" class="ss-alert ss-alert-error">{{ errorMessage() }}</div>
+
+  <!-- TARJETAS DE INDICADORES SUPERIORES (KPIS CON CÍRCULOS DE PORCENTAJE) -->
+  <section class="bi-kpi-grid">
+
+    <!-- Tarjeta Total Usuarios -->
+    <div class="kpi-box main-kpi">
+      <div class="kpi-icon-container">👥</div>
+      <div class="kpi-data">
+        <h2>{{ analytics()?.totalUsers ?? 0 | number }}</h2>
+        <p>Usuarios Totales en la Red · {{ analytics()?.totalSkills ?? 0 }} habilidades en catálogo</p>
+      </div>
+    </div>
+
+    <!-- Tarjeta Inactividad / Tasa -->
+    <div class="kpi-box">
+      <div class="percentage-circle pink-circle">{{ inactivityRate() }}%</div>
+      <div class="kpi-data">
+        <h3>Tasa de Inactividad</h3>
+        <p>Estudiantes sin ofertas ni solicitudes: {{ analytics()?.studentsWithoutActivity ?? 0 }}</p>
+      </div>
+    </div>
+
+    <!-- Tarjeta Fuerza Activa -->
+    <div class="kpi-box">
+      <div class="percentage-circle teal-circle">{{ activityRate() }}%</div>
+      <div class="kpi-data">
+        <h3>Fuerza Activa en Intercambios</h3>
+        <p>Número de Activos: {{ analytics()?.studentsWithActivity ?? 0 }}</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CUADRÍCULA PRINCIPAL DE PANELES ANALÍTICOS -->
+  <section class="bi-main-grid">
+
+    <!-- COLUMNA IZQUIERDA: HABILIDADES MÁS OFERTADAS Y SOLICITADAS -->
+    <div class="bi-card">
+      <h3>Habilidades Populares (más ofertadas)</h3>
+      <div class="metric-row-badge" *ngFor="let s of analytics()?.topOfferedSkills; let i = index">
+        <span>{{ s.name }} <small class="ss-muted">({{ s.category }})</small></span>
+        <span [class.badge-teal]="i === 0" [class.badge-dark]="i > 0">{{ s.count }}</span>
+      </div>
+      <p *ngIf="!analytics()?.topOfferedSkills?.length" class="hint-text">Aún no hay ofertas registradas.</p>
+
+      <div class="sub-header-title">Habilidades más solicitadas</div>
+      <ul class="clean-list">
+        <li *ngFor="let s of analytics()?.topRequestedSkills"><span>{{ s.name }}</span> <b>{{ s.count }}</b></li>
+        <li *ngIf="!analytics()?.topRequestedSkills?.length"><span>Sin solicitudes registradas</span> <b>0</b></li>
+      </ul>
+
+      <div class="bottom-metric-highlight">
+        <p>Ofertas activas / Solicitudes activas</p>
+        <h2>{{ analytics()?.totalOffers ?? 0 }} / {{ analytics()?.totalRequests ?? 0 }} 📊</h2>
+      </div>
+    </div>
+
+    <!-- COLUMNA CENTRAL: DESGLOSE POR ROL E INTERCAMBIOS -->
+    <div class="bi-card">
+      <h3>Desglose de Usuarios por Perfil</h3>
+      <div class="bar-progress-container" *ngFor="let r of analytics()?.usersByRole">
+        <span class="bar-label">{{ r.role }}</span>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width]="barWidth(r.count, analytics()?.totalUsers ?? 0)"></div>
+        </div>
+        <span class="bar-value">{{ r.count }} usuarios</span>
+      </div>
+
+      <div class="sub-header-title" style="margin-top: 25px;">Intercambios por Estado ({{ analytics()?.totalExchanges ?? 0 }})</div>
+      <div class="bar-progress-container" *ngFor="let e of analytics()?.exchangesByStatus">
+        <span class="bar-label">{{ e.status }}</span>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width]="barWidth(e.count, analytics()?.totalExchanges ?? 0)"></div>
+        </div>
+        <span class="bar-value">{{ e.count }}</span>
+      </div>
+      <p *ngIf="!analytics()?.exchangesByStatus?.length" class="hint-text">Todavía no se han propuesto intercambios.</p>
+
+      <div class="sub-header-title" style="margin-top: 25px;">Indicador de Rendimiento de API</div>
+      <div class="mini-status-box">
+        <span>Conexión PostgreSQL (.NET Backend)</span>
+        <b [class.text-success]="health()?.databaseConnected" [class.text-danger]="!health()?.databaseConnected">
+          {{ health() ? (health()?.databaseConnected ? '100% Operativo' : 'Sin conexión') : 'Verificando...' }}
+        </b>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: VISTA ADAPTATIVA SEGÚN ROL (ESTUDIANTE O MASTER) -->
+    <div class="bi-card">
+      <h3>Panel de Control Personalizado</h3>
+
+      <!-- Vista para Estudiante -->
+      <div *ngIf="isStudent" class="role-specific-view">
+        <p class="welcome-msg">Bienvenido, <b>{{ username }}</b>. Estás conectado al núcleo de intercambios de SkillSwap.</p>
+        <div class="student-stats-row">
+          <div class="mini-stat-card">
+            <h4>Mis Ofertas</h4>
+            <p>{{ myActiveOffers() }} Activas</p>
+          </div>
+          <div class="mini-stat-card">
+            <h4>Mis Solicitudes</h4>
+            <p>{{ myActiveRequests() }} Activas</p>
+          </div>
+        </div>
+        <div class="student-stats-row">
+          <div class="mini-stat-card">
+            <h4>Pendientes</h4>
+            <p>{{ myProfile()?.exchangesPending ?? 0 }}</p>
+          </div>
+          <div class="mini-stat-card">
+            <h4>Intercambios</h4>
+            <p>{{ myProfile()?.exchangesCompleted ?? 0 }} Realizados</p>
+          </div>
+        </div>
+        <div class="sub-header-title">Sugerencias para ti</div>
+        <p class="hint-text">
+          Registra lo que sabes en <a routerLink="/offers">Ofertas</a>, lo que quieres aprender en
+          <a routerLink="/requests">Solicitudes</a> y revisa tus <a routerLink="/matches">Coincidencias</a>
+          para iniciar un nuevo intercambio de conocimientos hoy.
+        </p>
+      </div>
+
+      <!-- Vista para Master / Technical -->
+      <div *ngIf="!isStudent" class="role-specific-view">
+        <p class="welcome-msg">Supervisión gerencial para el usuario <b>{{ username }}</b>.</p>
+        <div class="student-stats-row">
+          <div class="mini-stat-card">
+            <h4>Intercambios Pendientes</h4>
+            <p style="color: #ff4757;">{{ pendingExchanges() }} Por Revisar</p>
+          </div>
+          <div class="mini-stat-card">
+            <h4>Calificación Promedio</h4>
+            <p style="color: #2ed573;">{{ analytics()?.averageRating ?? 0 }} ★</p>
+          </div>
+        </div>
+        <div class="sub-header-title">Estado de Servidores</div>
+        <div class="mini-status-box">
+          <span>Puerto API .NET (5066)</span>
+          <b [class.text-success]="health()" [class.text-danger]="!health()">{{ health() ? 'En Línea' : 'Sin respuesta' }}</b>
+        </div>
+        <div class="mini-status-box" *ngIf="health()">
+          <span>Migraciones pendientes</span>
+          <b [class.text-success]="(health()?.pendingMigrations?.length ?? 0) === 0" [class.text-danger]="(health()?.pendingMigrations?.length ?? 0) > 0">
+            {{ health()?.pendingMigrations?.length ?? 0 }}
+          </b>
+        </div>
+        <div class="sub-header-title">Accesos rápidos</div>
+        <p class="hint-text">
+          <a routerLink="/students">Estudiantes</a> · <a routerLink="/skills">Habilidades</a> ·
+          <a routerLink="/exchanges">Intercambios</a>
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer class="bi-footer-exec">
+    <p>Este <b>Dashboard</b> se fundamenta en una fuente de datos en tiempo real de <b>SkillSwap</b> y representa una aproximación ejecutiva a casos del mundo real.</p>
+  </footer>
+
+</div>

@@ -1,0 +1,124 @@
+<div class="auth-container" [class.light-on]="lamparaEncendida">
+
+  <!-- ========================================= -->
+  <!-- LÁMPARA -->
+  <!-- ========================================= -->
+  <div class="lamp-container" (click)="activarLampara()" aria-label="Lámpara">
+    <div class="lamp-cable"></div>
+    <div class="lamp-holder"></div>
+    <div class="lamp-shade">
+      <div class="lamp-bulb"></div>
+    </div>
+    <div class="lamp-light"></div>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- TARJETA DE AUTENTICACIÓN -->
+  <!-- ========================================= -->
+  <div class="auth-card" [class.show-card]="lamparaEncendida">
+
+    <!-- MARCA -->
+    <div class="brand">
+      <div class="brand-icon">💡</div>
+      <h1>Skill<span>Swap</span></h1>
+      <p>Intercambia conocimientos y habilidades</p>
+    </div>
+
+    <!-- PESTAÑAS -->
+    <div class="tab-buttons">
+      <button type="button" [class.active]="isLoginMode" (click)="toggleMode(true)">
+        Iniciar Sesión
+      </button>
+      <button type="button" [class.active]="!isLoginMode" (click)="toggleMode(false)">
+        Registrarse
+      </button>
+    </div>
+
+    <!-- MENSAJES -->
+    <div *ngIf="errorMessage()" class="alert error">{{ errorMessage() }}</div>
+    <div *ngIf="successMessage()" class="alert success">{{ successMessage() }}</div>
+
+    <!-- LOGIN -->
+    <form *ngIf="isLoginMode" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <div class="input-container">
+          <span class="input-icon">✉</span>
+          <input type="email" [(ngModel)]="loginEmail" name="loginEmail" required placeholder="tu@correo.com" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <div class="input-container">
+          <span class="input-icon">🔒</span>
+          <input type="password" [(ngModel)]="loginPassword" name="loginPassword" required placeholder="********" />
+        </div>
+      </div>
+
+      <div class="login-options">
+        <label class="remember">
+          <input type="checkbox" />
+          <span>Recordarme</span>
+        </label>
+        <a href="javascript:void(0)">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit" class="btn-submit">Entrar</button>
+    </form>
+
+    <!-- REGISTRO -->
+    <form *ngIf="!isLoginMode" (ngSubmit)="onRegister()">
+      <div class="form-group">
+        <label>Nombre de Usuario</label>
+        <div class="input-container">
+          <span class="input-icon">👤</span>
+          <input type="text" [(ngModel)]="regUsername" name="regUsername" required placeholder="usuario123" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Correo Electrónico</label>
+        <div class="input-container">
+          <span class="input-icon">✉</span>
+          <input type="email" [(ngModel)]="regEmail" name="regEmail" required placeholder="tu@correo.com" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <div class="input-container">
+          <span class="input-icon">🔒</span>
+          <input type="password" [(ngModel)]="regPassword" name="regPassword" required placeholder="********" />
+        </div>
+      </div>
+
+      <!-- NOMBRE Y APELLIDO (Estructura unificada con input-container) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <div class="input-container">
+            <input type="text" class="no-icon-input" [(ngModel)]="regFirstName" name="regFirstName" required placeholder="Luis" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <div class="input-container">
+            <input type="text" class="no-icon-input" [(ngModel)]="regLastName" name="regLastName" required placeholder="Almachi" />
+          </div>
+        </div>
+      </div>
+
+      <!-- BIOGRAFÍA -->
+      <div class="form-group">
+        <label>Biografía</label>
+        <div class="input-container">
+          <input type="text" class="no-icon-input" [(ngModel)]="regBio" name="regBio" placeholder="¿Qué ofreces o buscas?" />
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit">Crear Cuenta</button>
+    </form>
+
+  </div>
+</div>

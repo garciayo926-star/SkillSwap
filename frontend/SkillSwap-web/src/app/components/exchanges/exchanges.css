@@ -1,0 +1,14 @@
+/* Los estilos compartidos (ss-*) están en src/styles.css */
+.feedback-field {
+  margin-top: 14px;
+}
+
+.skill-line {
+  margin-bottom: 2px;
+}
+
+.stars {
+  color: #fdcb6e;
+  font-size: 15px;
+  letter-spacing: 1px;
+}

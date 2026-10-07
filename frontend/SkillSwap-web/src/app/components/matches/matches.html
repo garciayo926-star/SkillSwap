@@ -1,0 +1,102 @@
+<div class="ss-page">
+
+  <!-- CABECERA -->
+  <header class="ss-page-header">
+    <div>
+      <h1>🔗 Motor de Coincidencias</h1>
+      <p>Estudiantes que ofrecen lo que quieres aprender y buscan lo que tú ofreces</p>
+    </div>
+    <button class="ss-btn ss-btn-light" (click)="goToExchanges()">Ver mis intercambios</button>
+  </header>
+
+  <!-- MENSAJES -->
+  <div *ngIf="errorMessage()" class="ss-alert ss-alert-error">{{ errorMessage() }}</div>
+  <div *ngIf="successMessage()" class="ss-alert ss-alert-success">{{ successMessage() }}</div>
+
+  <!-- OPCIONES DE BÚSQUEDA -->
+  <section class="ss-card">
+    <h3>Opciones de búsqueda</h3>
+    <div class="ss-filters">
+      <div class="ss-field" *ngIf="isAdmin">
+        <label>Buscar coincidencias para</label>
+        <select [(ngModel)]="selectedStudentId" (ngModelChange)="loadMatches()">
+          <option [ngValue]="null" disabled>Selecciona un estudiante</option>
+          <option *ngFor="let s of students()" [ngValue]="s.id">{{ s.fullName }}</option>
+        </select>
+      </div>
+      <label class="ss-checkbox">
+        <input type="checkbox" [(ngModel)]="includePartial" (ngModelChange)="loadMatches()" />
+        Incluir coincidencias parciales (en una sola dirección)
+      </label>
+      <button class="ss-btn" (click)="loadMatches()" [disabled]="!selectedStudentId">Actualizar</button>
+    </div>
+    <p class="ss-muted legend">
+      <span class="ss-badge ss-badge-teal">Mutua</span> ambos pueden enseñarse algo ·
+      <span class="ss-badge ss-badge-orange">Parcial</span> solo uno de los dos tiene lo que el otro busca
+    </p>
+  </section>
+
+  <!-- SIN ESTUDIANTE -->
+  <div *ngIf="!selectedStudentId" class="ss-card ss-empty">
+    {{ isAdmin ? 'Selecciona un estudiante para ver sus coincidencias.' : 'Tu cuenta no tiene un perfil de estudiante asociado.' }}
+  </div>
+
+  <div *ngIf="loading()" class="ss-card ss-empty">Buscando coincidencias...</div>
+
+  <div *ngIf="!loading() && searched() && selectedStudentId && matches().length === 0" class="ss-card ss-empty">
+    No hay coincidencias por ahora. Registra más ofertas y solicitudes
+    {{ includePartial ? '' : 'o activa las coincidencias parciales' }} para encontrar compañeros de intercambio.
+  </div>
+
+  <!-- RESULTADOS -->
+  <section class="matches-grid" *ngIf="!loading() && matches().length > 0">
+    <div class="match-card" *ngFor="let m of matches()" [class.mutual]="m.matchType === 'Mutua'">
+      <div class="match-header">
+        <div class="match-avatar">{{ m.fullName.charAt(0) }}</div>
+        <div class="match-info">
+          <h4>{{ m.fullName }}</h4>
+          <p>{{ m.bio }}</p>
+        </div>
+        <span class="ss-badge" [class.ss-badge-teal]="m.matchType === 'Mutua'" [class.ss-badge-orange]="m.matchType === 'Parcial'">
+          {{ m.matchType }}
+        </span>
+      </div>
+
+      <div class="match-section">
+        <span class="match-label">Te puede enseñar</span>
+        <div>
+          <span *ngFor="let s of m.offeredSkillsToMe" class="ss-chip">{{ s.skillName }}</span>
+          <span *ngIf="m.offeredSkillsToMe.length === 0" class="ss-muted">—</span>
+        </div>
+      </div>
+
+      <div class="match-section">
+        <span class="match-label">Quiere aprender de ti</span>
+        <div>
+          <span *ngFor="let s of m.wantedSkillsFromMe" class="ss-chip">{{ s.skillName }}</span>
+          <span *ngIf="m.wantedSkillsFromMe.length === 0" class="ss-muted">—</span>
+        </div>
+      </div>
+
+      <!-- PROPUESTA -->
+      <div class="proposal">
+        <div class="ss-field" *ngIf="m.wantedSkillsFromMe.length > 0">
+          <label>Yo enseño</label>
+          <select [(ngModel)]="selectedOffered[m.studentId]">
+            <option [ngValue]="null">Ninguna</option>
+            <option *ngFor="let s of m.wantedSkillsFromMe" [ngValue]="s.skillId">{{ s.skillName }}</option>
+          </select>
+        </div>
+        <div class="ss-field" *ngIf="m.offeredSkillsToMe.length > 0">
+          <label>Yo aprendo</label>
+          <select [(ngModel)]="selectedRequested[m.studentId]">
+            <option [ngValue]="null">Ninguna</option>
+            <option *ngFor="let s of m.offeredSkillsToMe" [ngValue]="s.skillId">{{ s.skillName }}</option>
+          </select>
+        </div>
+        <button class="ss-btn ss-btn-primary" (click)="propose(m)">Proponer intercambio</button>
+      </div>
+    </div>
+  </section>
+
+</div>

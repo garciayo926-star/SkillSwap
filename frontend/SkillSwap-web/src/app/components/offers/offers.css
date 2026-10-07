@@ -1,0 +1,14 @@
+/* Los estilos compartidos (ss-*) están en src/styles.css */
+.desc-field {
+  margin-top: 14px;
+}
+
+.ss-checkbox {
+  margin-top: 12px;
+}
+
+.toggles {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
