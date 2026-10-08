@@ -73,11 +73,20 @@ namespace SkillSwap.API.Migrations
                     b.Property<int>("InitiatorStudentId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("OfferedSkillId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
                     b.Property<int>("ReceiverStudentId")
                         .HasColumnType("integer");
+
+                    b.Property<int?>("RequestedSkillId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("SessionDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -87,7 +96,11 @@ namespace SkillSwap.API.Migrations
 
                     b.HasIndex("InitiatorStudentId");
 
+                    b.HasIndex("OfferedSkillId");
+
                     b.HasIndex("ReceiverStudentId");
+
+                    b.HasIndex("RequestedSkillId");
 
                     b.ToTable("Exchanges");
                 });
@@ -107,6 +120,14 @@ namespace SkillSwap.API.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Modality")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("SkillId")
                         .HasColumnType("integer");
 
@@ -117,9 +138,60 @@ namespace SkillSwap.API.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId", "SkillId")
+                        .IsUnique();
 
                     b.ToTable("Offers");
+                });
+
+            modelBuilder.Entity("SkillSwap.API.Models.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ExchangeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ReportedUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ReporterUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Resolution")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExchangeId");
+
+                    b.HasIndex("ReportedUserId");
+
+                    b.HasIndex("ReporterUserId");
+
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("SkillSwap.API.Models.Request", b =>
@@ -129,6 +201,10 @@ namespace SkillSwap.API.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DesiredLevel")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -147,9 +223,49 @@ namespace SkillSwap.API.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId", "SkillId")
+                        .IsUnique();
 
                     b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("SkillSwap.API.Models.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ExchangeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RevieweeStudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ReviewerStudentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExchangeId")
+                        .IsUnique();
+
+                    b.HasIndex("RevieweeStudentId");
+
+                    b.HasIndex("ReviewerStudentId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("SkillSwap.API.Models.Role", b =>
@@ -172,17 +288,17 @@ namespace SkillSwap.API.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Master"
+                            Name = "Administrador"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Technical"
+                            Name = "Moderador"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Student"
+                            Name = "Estudiante"
                         });
                 });
 
@@ -202,7 +318,16 @@ namespace SkillSwap.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("SuggestedByStudentId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("SuggestedByStudentId");
 
                     b.ToTable("Skills");
                 });
@@ -218,6 +343,9 @@ namespace SkillSwap.API.Migrations
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<double>("Reputation")
+                        .HasColumnType("double precision");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -333,15 +461,29 @@ namespace SkillSwap.API.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SkillSwap.API.Models.Skill", "OfferedSkill")
+                        .WithMany()
+                        .HasForeignKey("OfferedSkillId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SkillSwap.API.Models.Student", "ReceiverStudent")
                         .WithMany("ExchangesReceived")
                         .HasForeignKey("ReceiverStudentId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SkillSwap.API.Models.Skill", "RequestedSkill")
+                        .WithMany()
+                        .HasForeignKey("RequestedSkillId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("InitiatorStudent");
 
+                    b.Navigation("OfferedSkill");
+
                     b.Navigation("ReceiverStudent");
+
+                    b.Navigation("RequestedSkill");
                 });
 
             modelBuilder.Entity("SkillSwap.API.Models.Offer", b =>
@@ -363,6 +505,31 @@ namespace SkillSwap.API.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("SkillSwap.API.Models.Report", b =>
+                {
+                    b.HasOne("SkillSwap.API.Models.Exchange", "Exchange")
+                        .WithMany()
+                        .HasForeignKey("ExchangeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SkillSwap.API.Models.User", "ReportedUser")
+                        .WithMany()
+                        .HasForeignKey("ReportedUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SkillSwap.API.Models.User", "ReporterUser")
+                        .WithMany()
+                        .HasForeignKey("ReporterUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Exchange");
+
+                    b.Navigation("ReportedUser");
+
+                    b.Navigation("ReporterUser");
+                });
+
             modelBuilder.Entity("SkillSwap.API.Models.Request", b =>
                 {
                     b.HasOne("SkillSwap.API.Models.Skill", "Skill")
@@ -380,6 +547,43 @@ namespace SkillSwap.API.Migrations
                     b.Navigation("Skill");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SkillSwap.API.Models.Review", b =>
+                {
+                    b.HasOne("SkillSwap.API.Models.Exchange", "Exchange")
+                        .WithOne("Review")
+                        .HasForeignKey("SkillSwap.API.Models.Review", "ExchangeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SkillSwap.API.Models.Student", "RevieweeStudent")
+                        .WithMany()
+                        .HasForeignKey("RevieweeStudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SkillSwap.API.Models.Student", "ReviewerStudent")
+                        .WithMany()
+                        .HasForeignKey("ReviewerStudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Exchange");
+
+                    b.Navigation("RevieweeStudent");
+
+                    b.Navigation("ReviewerStudent");
+                });
+
+            modelBuilder.Entity("SkillSwap.API.Models.Skill", b =>
+                {
+                    b.HasOne("SkillSwap.API.Models.Student", "SuggestedByStudent")
+                        .WithMany()
+                        .HasForeignKey("SuggestedByStudentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("SuggestedByStudent");
                 });
 
             modelBuilder.Entity("SkillSwap.API.Models.Student", b =>
@@ -421,6 +625,11 @@ namespace SkillSwap.API.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SkillSwap.API.Models.Exchange", b =>
+                {
+                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("SkillSwap.API.Models.Role", b =>

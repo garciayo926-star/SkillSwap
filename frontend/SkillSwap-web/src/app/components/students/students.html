@@ -3,10 +3,10 @@
   <!-- CABECERA -->
   <header class="ss-page-header">
     <div>
-      <h1>🎓 Gestión de Estudiantes</h1>
-      <p>Perfiles registrados, sus habilidades ofrecidas y solicitadas</p>
+      <h1>🎓 Gestión de Usuarios</h1>
+      <p>Cuentas registradas, sus habilidades ofrecidas y solicitadas</p>
     </div>
-    <button class="ss-btn ss-btn-primary" (click)="openCreate()">+ Nuevo Estudiante</button>
+    <button *ngIf="canCreate" class="ss-btn ss-btn-primary" (click)="openCreate()">+ Nueva Cuenta</button>
   </header>
 
   <!-- MENSAJES -->
@@ -15,7 +15,7 @@
 
   <!-- FORMULARIO -->
   <section *ngIf="showForm" class="ss-card">
-    <h3>{{ editingId ? 'Editar Estudiante' : 'Nuevo Estudiante' }}</h3>
+    <h3>{{ editingId ? 'Editar Usuario' : 'Nueva Cuenta' }}</h3>
     <form (ngSubmit)="save()">
       <div class="ss-form-grid">
         <div class="ss-field">
@@ -38,12 +38,19 @@
           <label>Apellido</label>
           <input type="text" [(ngModel)]="form.lastName" name="lastName" required />
         </div>
+        <!-- Solo el Administrador elige el rol al crear la cuenta -->
+        <div class="ss-field" *ngIf="!editingId && canCreate">
+          <label>Rol de la cuenta</label>
+          <select [(ngModel)]="form.roleName" name="roleName">
+            <option *ngFor="let r of roles" [value]="r">{{ roleLabels[r] }}</option>
+          </select>
+        </div>
       </div>
       <div class="ss-field bio-field">
         <label>Biografía</label>
         <textarea [(ngModel)]="form.bio" name="bio" placeholder="¿Qué ofrece o busca?"></textarea>
       </div>
-      <label *ngIf="editingId" class="ss-checkbox">
+      <label *ngIf="editingId && canDeactivate" class="ss-checkbox">
         <input type="checkbox" [(ngModel)]="form.isActive" name="isActive" />
         Cuenta activa
       </label>
@@ -73,21 +80,21 @@
 
   <!-- LISTADO -->
   <section class="ss-card">
-    <h3>Estudiantes registrados ({{ students().length }})</h3>
+    <h3>Cuentas registradas ({{ students().length }})</h3>
 
     <div *ngIf="loading()" class="ss-empty">Cargando...</div>
-    <div *ngIf="!loading() && students().length === 0" class="ss-empty">No se encontraron estudiantes.</div>
+    <div *ngIf="!loading() && students().length === 0" class="ss-empty">No se encontraron usuarios.</div>
 
     <div *ngIf="!loading() && students().length > 0" class="ss-table-wrapper">
       <table class="ss-table">
         <thead>
           <tr>
-            <th>Estudiante</th>
+            <th>Usuario</th>
             <th>Ofrece</th>
             <th>Quiere aprender</th>
             <th>Intercambios</th>
             <th>Estado</th>
-            <th *ngIf="isMaster">Rol</th>
+            <th>Rol</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -111,17 +118,25 @@
                 {{ s.isActive ? 'Activo' : 'Inactivo' }}
               </span>
             </td>
-            <td *ngIf="isMaster">
-              <div class="ss-field">
+            <td>
+              <!-- El Master cambia el rol; los demás solo lo ven -->
+              <div class="ss-field" *ngIf="canChangeRole">
                 <select [ngModel]="roleOf(s.userId)" (ngModelChange)="changeRole(s, $event)">
-                  <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+                  <option *ngFor="let r of roles" [value]="r">{{ roleLabels[r] }}</option>
                 </select>
               </div>
+              <span *ngIf="!canChangeRole" class="ss-badge ss-badge-dark">{{ roleLabelOf(s.userId) }}</span>
             </td>
             <td>
               <div class="ss-actions">
-                <button class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(s)">Editar</button>
-                <button class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(s)">Eliminar</button>
+                <button *ngIf="canEdit" class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(s)">Editar</button>
+
+                <!-- Activar / desactivar (el Profesor solo activa) -->
+                <button *ngIf="!s.isActive && canActivate" class="ss-btn ss-btn-sm ss-btn-success" (click)="toggleStatus(s)">Activar</button>
+                <button *ngIf="s.isActive && canDeactivate" class="ss-btn ss-btn-sm ss-btn-light" (click)="toggleStatus(s)">Desactivar</button>
+
+                <button *ngIf="canResetPassword" class="ss-btn ss-btn-sm ss-btn-light" (click)="resetPassword(s)">Contraseña</button>
+                <button *ngIf="canDelete" class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(s)">Eliminar</button>
               </div>
             </td>
           </tr>

@@ -23,14 +23,14 @@ export const routes: Routes = [
       // Ruta protegida general para usuarios logueados
       { path: 'dashboard', component: DashboardComponent },
 
-      // Ruta protegida exclusiva para el rol Master
-      { path: 'admin/analytics', component: DashboardComponent, data: { roles: ['Master'] } },
+      // Ruta protegida exclusiva para el Administrador
+      { path: 'admin/analytics', component: DashboardComponent, data: { roles: ['Administrador'] } },
 
-      // Ruta protegida para Technical o Master
-      { path: 'admin/system-health', component: DashboardComponent, data: { roles: ['Technical', 'Master'] } },
+      // Estado del sistema: solo Administrador
+      { path: 'admin/system-health', component: DashboardComponent, data: { roles: ['Administrador'] } },
 
-      // CRUD de Estudiantes: solo administración (Technical o Master)
-      { path: 'students', component: StudentsComponent, data: { roles: ['Technical', 'Master'] } },
+      // Gestión de usuarios: Administrador y Moderador. El Estudiante no accede.
+      { path: 'students', component: StudentsComponent, data: { roles: ['Administrador', 'Moderador'] } },
 
       // CRUD disponibles para todos los roles (cada pantalla limita acciones según el rol)
       { path: 'skills', component: SkillsComponent },

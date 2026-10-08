@@ -63,14 +63,27 @@ export class LoginComponent implements OnInit {
     this.errorMessage.set('');
     this.successMessage.set('');
 
+    // Validación del lado del cliente antes de llamar a la API
+    const email = this.loginEmail.trim();
+    if (!email || !this.loginPassword) {
+      this.errorMessage.set('Ingresa tu correo electrónico y tu contraseña.');
+      return;
+    }
+    // Formato de correo básico
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) {
+      this.errorMessage.set('El correo electrónico no tiene un formato válido.');
+      return;
+    }
+
     this.authService.login({
-      email: this.loginEmail,
+      email,
       password: this.loginPassword
     }).subscribe({
       next: (response) => {
-        // AuthService ya guardó userId, username, userRole y studentId en localStorage.
-        // Master/Technical pueden no tener perfil de estudiante, por eso se valida userId.
-        if (response && response.userId) {
+        // AuthService ya guardó token, userId, username, userRole y studentId en localStorage.
+        // Administrador/Moderador pueden no tener perfil de estudiante, por eso se valida el token.
+        if (response && response.token) {
           this.successMessage.set('¡Inicio de sesión exitoso!');
           this.router.navigate(['/dashboard']);
         } else {
@@ -78,7 +91,12 @@ export class LoginComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.message || 'Correo o contraseña incorrectos.');
+        // 401 -> credenciales incorrectas; 0 -> API apagada; otros -> mensaje del backend
+        if (err.status === 0) {
+          this.errorMessage.set('No se pudo conectar con el servidor. Verifica que la API esté encendida.');
+        } else {
+          this.errorMessage.set(err.error?.message || 'Correo o contraseña incorrectos.');
+        }
       }
     });
   }

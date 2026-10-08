@@ -15,6 +15,7 @@ export class AuthService {
     return this.http.post<any>(`${this.baseUrl}/login`, credentials).pipe(
       tap(response => {
         if (this.hasStorage()) {
+          localStorage.setItem('token', response.token);
           localStorage.setItem('userId', response.userId);
           localStorage.setItem('username', response.username);
           localStorage.setItem('userRole', response.role);
@@ -30,6 +31,11 @@ export class AuthService {
 
   register(userData: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/register`, userData);
+  }
+
+  // Token JWT firmado que la API valida en cada petición protegida
+  getToken(): string {
+    return this.getItem('token');
   }
 
   // Devuelve '' cuando no hay sesión, así el guard puede redirigir al login
@@ -50,18 +56,31 @@ export class AuthService {
     return id ? Number(id) : null;
   }
 
+  // Hay sesión válida solo si existe un token (además del id y el rol)
   isLoggedIn(): boolean {
-    return !!this.getUserId() && !!this.getUserRole();
+    return !!this.getToken() && !!this.getUserId() && !!this.getUserRole();
   }
 
-  isMaster(): boolean {
-    return this.getUserRole() === 'Master';
-  }
-
-  // Master y Technical pueden administrar los catálogos del sistema
+  // Administrador: superusuario con control total
   isAdmin(): boolean {
+    return this.getUserRole() === 'Administrador';
+  }
+
+  // Moderador: gestión de comunidad y contenido
+  isModerador(): boolean {
+    return this.getUserRole() === 'Moderador';
+  }
+
+  // Estudiante: usuario final (también el valor por defecto sin rol)
+  isStudent(): boolean {
     const role = this.getUserRole();
-    return role === 'Master' || role === 'Technical';
+    return role === 'Estudiante' || role === '';
+  }
+
+  // Perfiles con visión global (ven el dashboard analítico). El Estudiante NO.
+  canSeeGlobalDashboard(): boolean {
+    const role = this.getUserRole();
+    return role === 'Administrador' || role === 'Moderador';
   }
 
   logout(): void {

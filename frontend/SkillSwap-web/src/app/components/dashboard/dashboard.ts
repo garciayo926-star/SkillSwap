@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, signal, computed } from '@a
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { AdminService, Analytics, SystemHealth } from '../../services/admin';
+import { AdminService, Analytics, SystemHealth, ROLE_LABELS } from '../../services/admin';
 import { StudentDetail, StudentService } from '../../services/student';
 
 @Component({
@@ -16,10 +16,15 @@ import { StudentDetail, StudentService } from '../../services/student';
 export class DashboardComponent implements OnInit {
   username: string = '';
   userRole: string = '';
+  roleLabel: string = '';
 
-  isMaster = false;
-  isTechnical = false;
+  isAdmin = false;
+  isModerador = false;
   isStudent = false;
+
+  // Solo los perfiles con visión global ven las métricas administrativas.
+  // El Estudiante nunca ve el desglose de usuarios ni los indicadores del sistema.
+  canSeeGlobal = false;
 
   // Métricas reales obtenidas desde la API de SkillSwap (asíncronas): signals
   analytics = signal<Analytics | null>(null);
@@ -53,24 +58,32 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.username = this.authService.getUsername() || 'Usuario';
-    this.userRole = this.authService.getUserRole() || 'Student';
+    this.userRole = this.authService.getUserRole() || 'Estudiante';
+    this.roleLabel = ROLE_LABELS[this.userRole] || this.userRole;
 
-    this.isMaster = this.userRole === 'Master';
-    this.isTechnical = this.userRole === 'Technical' || this.userRole === 'Master';
-    this.isStudent = this.userRole === 'Student';
+    this.isAdmin = this.userRole === 'Administrador';
+    this.isModerador = this.userRole === 'Moderador';
+    this.isStudent = this.authService.isStudent();
+    this.canSeeGlobal = this.authService.canSeeGlobalDashboard();
 
     this.loadData();
   }
 
   loadData(): void {
-    this.adminService.getAnalytics().subscribe({
-      next: (data) => this.analytics.set(data),
-      error: () => this.errorMessage.set('No se pudo conectar con la API de SkillSwap (puerto 5066).')
-    });
+    // Las métricas globales solo se piden si el rol tiene permiso (si no, la API responde 401).
+    if (this.canSeeGlobal) {
+      this.adminService.getAnalytics().subscribe({
+        next: (data) => this.analytics.set(data),
+        error: () => this.errorMessage.set('No se pudo conectar con la API de SkillSwap (puerto 5066).')
+      });
+    }
 
-    this.adminService.getSystemHealth().subscribe({
-      next: (data) => this.health.set(data)
-    });
+    // El estado del sistema es responsabilidad del Administrador.
+    if (this.isAdmin) {
+      this.adminService.getSystemHealth().subscribe({
+        next: (data) => this.health.set(data)
+      });
+    }
 
     const studentId = this.authService.getStudentId();
     if (studentId) {

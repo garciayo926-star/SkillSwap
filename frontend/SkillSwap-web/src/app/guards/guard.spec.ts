@@ -11,6 +11,13 @@ describe('roleGuard', () => {
   const route = (roles?: string[]) => ({ data: roles ? { roles } : {} }) as unknown as ActivatedRouteSnapshot;
   const state = {} as RouterStateSnapshot;
 
+  // Simula una sesión válida (ahora requiere token, id y rol)
+  const session = (role: string) => {
+    localStorage.setItem('token', 'token-de-prueba');
+    localStorage.setItem('userId', 'u1');
+    localStorage.setItem('userRole', role);
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])]
@@ -23,20 +30,17 @@ describe('roleGuard', () => {
   });
 
   it('allows a logged user on routes without roles', () => {
-    localStorage.setItem('userId', 'u1');
-    localStorage.setItem('userRole', 'Student');
+    session('Estudiante');
     expect(executeGuard(route(), state)).toBe(true);
   });
 
-  it('blocks a Student on Master-only routes', () => {
-    localStorage.setItem('userId', 'u1');
-    localStorage.setItem('userRole', 'Student');
-    expect(executeGuard(route(['Master']), state)).toBeInstanceOf(UrlTree);
+  it('blocks an Estudiante on Administrador-only routes', () => {
+    session('Estudiante');
+    expect(executeGuard(route(['Administrador']), state)).toBeInstanceOf(UrlTree);
   });
 
-  it('allows a Master on Master-only routes', () => {
-    localStorage.setItem('userId', 'u1');
-    localStorage.setItem('userRole', 'Master');
-    expect(executeGuard(route(['Master']), state)).toBe(true);
+  it('allows an Administrador on Administrador-only routes', () => {
+    session('Administrador');
+    expect(executeGuard(route(['Administrador']), state)).toBe(true);
   });
 });

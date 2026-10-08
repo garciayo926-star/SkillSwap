@@ -34,11 +34,19 @@ export interface AdminUser {
   email: string;
   fullName: string;
   isActive: boolean;
+  createdAt: string;
   studentId: number | null;
   role: string;
 }
 
-export const ROLES = ['Master', 'Technical', 'Student'];
+export const ROLES = ['Administrador', 'Moderador', 'Estudiante'];
+
+// Etiquetas legibles en español para mostrar en la interfaz
+export const ROLE_LABELS: Record<string, string> = {
+  Administrador: 'Administrador',
+  Moderador: 'Moderador',
+  Estudiante: 'Estudiante'
+};
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +70,23 @@ export class AdminService {
 
   updateUserRole(userId: string, roleName: string): Observable<any> {
     return this.http.put<any>(`${this.baseUrl}/users/${userId}/role`, { roleName });
+  }
+
+  // El Administrador crea cuentas con cualquier rol
+  createUser(data: {
+    username: string; email: string; password: string;
+    firstName: string; lastName: string; roleName: string; bio?: string;
+  }): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/users`, data);
+  }
+
+  // Activar / desactivar una cuenta
+  setUserStatus(userId: string, isActive: boolean): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/users/${userId}/status`, { isActive });
+  }
+
+  // Restablecer la contraseña de un usuario (se guarda cifrada)
+  resetPassword(userId: string, newPassword: string): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/users/${userId}/password`, { newPassword });
   }
 }

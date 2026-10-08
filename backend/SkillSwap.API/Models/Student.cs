@@ -7,6 +7,9 @@
         public User? User { get; set; }
         public string Bio { get; set; } = string.Empty;
 
+        // Promedio de las calificaciones recibidas en sus intercambios (0 si aún no tiene reseñas)
+        public double Reputation { get; set; } = 0;
+
         public ICollection<Offer> Offers { get; set; } = new List<Offer>();
         public ICollection<Request> Requests { get; set; } = new List<Request>();
         public ICollection<Exchange> ExchangesInitiated { get; set; } = new List<Exchange>();

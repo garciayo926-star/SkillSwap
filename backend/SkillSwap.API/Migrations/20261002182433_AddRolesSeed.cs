@@ -13,21 +13,17 @@ namespace SkillSwap.API.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "DateProposed",
-                table: "Exchanges",
-                type: "timestamp with time zone",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+            // PostgreSQL no convierte text -> timestamp automáticamente, se requiere USING
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Exchanges\" ALTER COLUMN \"DateProposed\" TYPE timestamp with time zone " +
+                "USING \"DateProposed\"::timestamp with time zone;");
 
-            migrationBuilder.AlterColumn<DateTime>(
-                name: "DateCompleted",
-                table: "Exchanges",
-                type: "timestamp with time zone",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Exchanges\" ALTER COLUMN \"DateCompleted\" DROP NOT NULL;");
+
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Exchanges\" ALTER COLUMN \"DateCompleted\" TYPE timestamp with time zone " +
+                "USING NULLIF(\"DateCompleted\", '')::timestamp with time zone;");
 
             migrationBuilder.InsertData(
                 table: "Roles",
@@ -58,23 +54,16 @@ namespace SkillSwap.API.Migrations
                 keyColumn: "Id",
                 keyValue: 3);
 
-            migrationBuilder.AlterColumn<string>(
-                name: "DateProposed",
-                table: "Exchanges",
-                type: "text",
-                nullable: false,
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp with time zone");
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Exchanges\" ALTER COLUMN \"DateProposed\" TYPE text " +
+                "USING \"DateProposed\"::text;");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "DateCompleted",
-                table: "Exchanges",
-                type: "text",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(DateTime),
-                oldType: "timestamp with time zone",
-                oldNullable: true);
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Exchanges\" ALTER COLUMN \"DateCompleted\" TYPE text " +
+                "USING COALESCE(\"DateCompleted\"::text, '');");
+
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Exchanges\" ALTER COLUMN \"DateCompleted\" SET NOT NULL;");
         }
     }
 }

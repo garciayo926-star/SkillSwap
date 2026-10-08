@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, signal } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Student, StudentService } from '../../services/student';
-import { AdminService, ROLES } from '../../services/admin';
+import { AdminService, ROLES, ROLE_LABELS } from '../../services/admin';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth';
 })
 export class StudentsComponent implements OnInit {
   roles = ROLES;
+  roleLabels = ROLE_LABELS;
 
   // Estado del backend (asíncrono): signals
   students = signal<Student[]>([]);
@@ -31,7 +32,17 @@ export class StudentsComponent implements OnInit {
   editingId: number | null = null;
   form = this.emptyForm();
 
-  isMaster = false;
+  // Permisos por rol (coinciden con lo que la API autoriza con el token)
+  isAdmin = false;
+  isModerador = false;
+
+  canCreate = false;       // Administrador
+  canEdit = false;         // Administrador, Moderador
+  canDelete = false;       // Administrador
+  canDeactivate = false;   // Administrador, Moderador (suspender)
+  canActivate = false;     // Administrador, Moderador
+  canChangeRole = false;   // Administrador
+  canResetPassword = false; // Administrador
 
   constructor(
     private studentService: StudentService,
@@ -40,9 +51,20 @@ export class StudentsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.isMaster = this.authService.isMaster();
+    const role = this.authService.getUserRole();
+    this.isAdmin = role === 'Administrador';
+    this.isModerador = role === 'Moderador';
+
+    this.canCreate = this.isAdmin;
+    this.canEdit = this.isAdmin || this.isModerador;
+    this.canDelete = this.isAdmin;
+    this.canDeactivate = this.isAdmin || this.isModerador;
+    this.canActivate = this.isAdmin || this.isModerador;
+    this.canChangeRole = this.isAdmin;
+    this.canResetPassword = this.isAdmin;
+
     this.loadStudents();
-    if (this.isMaster) this.loadRoles();
+    this.loadRoles();
   }
 
   loadStudents(): void {
@@ -52,7 +74,7 @@ export class StudentsComponent implements OnInit {
         this.students.set(data);
         this.loading.set(false);
       },
-      error: (err) => this.handleError(err, 'No se pudieron cargar los estudiantes.')
+      error: (err) => this.handleError(err, 'No se pudieron cargar los usuarios.')
     });
   }
 
@@ -67,7 +89,11 @@ export class StudentsComponent implements OnInit {
   }
 
   roleOf(userId: string): string {
-    return this.userRoles()[userId] || 'Student';
+    return this.userRoles()[userId] || 'Estudiante';
+  }
+
+  roleLabelOf(userId: string): string {
+    return this.roleLabels[this.roleOf(userId)] || this.roleOf(userId);
   }
 
   clearFilters(): void {
@@ -91,7 +117,8 @@ export class StudentsComponent implements OnInit {
       firstName: student.firstName,
       lastName: student.lastName,
       bio: student.bio,
-      isActive: student.isActive
+      isActive: student.isActive,
+      roleName: 'Estudiante'
     };
     this.showForm = true;
   }
@@ -104,37 +131,73 @@ export class StudentsComponent implements OnInit {
       return;
     }
 
-    const call = this.editingId
-      ? this.studentService.update(this.editingId, {
-          username: f.username, email: f.email, firstName: f.firstName,
-          lastName: f.lastName, bio: f.bio, isActive: f.isActive
-        })
-      : this.studentService.create({
-          username: f.username, email: f.email, password: f.password,
-          firstName: f.firstName, lastName: f.lastName, bio: f.bio
-        });
+    let call;
+    if (this.editingId) {
+      call = this.studentService.update(this.editingId, {
+        username: f.username, email: f.email, firstName: f.firstName,
+        lastName: f.lastName, bio: f.bio, isActive: f.isActive
+      });
+    } else {
+      // Solo el Administrador crea cuentas, y puede elegir el rol
+      call = this.adminService.createUser({
+        username: f.username, email: f.email, password: f.password,
+        firstName: f.firstName, lastName: f.lastName, roleName: f.roleName, bio: f.bio
+      });
+    }
 
     call.subscribe({
       next: () => {
-        this.successMessage.set(this.editingId ? 'Estudiante actualizado correctamente.' : 'Estudiante creado correctamente.');
+        this.successMessage.set(this.editingId ? 'Usuario actualizado correctamente.' : 'Cuenta creada correctamente.');
         this.resetForm(false);
         this.loadStudents();
-        if (this.isMaster) this.loadRoles();
+        this.loadRoles();
       },
-      error: (err) => this.handleError(err, 'No se pudo guardar el estudiante.')
+      error: (err) => this.handleError(err, 'No se pudo guardar el usuario.')
     });
   }
 
   delete(student: Student): void {
-    if (!confirm(`¿Eliminar al estudiante "${student.fullName}"? También se eliminarán sus ofertas y solicitudes.`)) return;
+    if (!confirm(`¿Eliminar al usuario "${student.fullName}"? También se eliminarán sus ofertas y solicitudes.`)) return;
     this.clearMessages();
 
     this.studentService.delete(student.id).subscribe({
       next: () => {
-        this.successMessage.set('Estudiante eliminado correctamente.');
+        this.successMessage.set('Usuario eliminado correctamente.');
         this.loadStudents();
       },
-      error: (err) => this.handleError(err, 'No se pudo eliminar el estudiante.')
+      error: (err) => this.handleError(err, 'No se pudo eliminar el usuario.')
+    });
+  }
+
+  // Activar / suspender la cuenta (Administrador y Moderador)
+  toggleStatus(student: Student): void {
+    this.clearMessages();
+    const newState = !student.isActive;
+    if (!newState && !this.canDeactivate) {
+      this.errorMessage.set('Tu perfil solo puede activar cuentas, no desactivarlas.');
+      return;
+    }
+    this.adminService.setUserStatus(student.userId, newState).subscribe({
+      next: (res) => {
+        this.successMessage.set(res.message);
+        this.loadStudents();
+      },
+      error: (err) => this.handleError(err, 'No se pudo cambiar el estado de la cuenta.')
+    });
+  }
+
+  // Restablecer la contraseña (solo Administrador). La nueva contraseña se guarda cifrada.
+  resetPassword(student: Student): void {
+    this.clearMessages();
+    const nueva = prompt(`Nueva contraseña para "${student.fullName}" (mínimo 6 caracteres):`);
+    if (nueva === null) return;
+    if (nueva.length < 6) {
+      this.errorMessage.set('La nueva contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+    this.adminService.resetPassword(student.userId, nueva).subscribe({
+      next: (res) => this.successMessage.set(res.message),
+      error: (err) => this.handleError(err, 'No se pudo restablecer la contraseña.')
     });
   }
 
@@ -143,7 +206,7 @@ export class StudentsComponent implements OnInit {
     this.adminService.updateUserRole(student.userId, roleName).subscribe({
       next: (res) => {
         this.userRoles.update(map => ({ ...map, [student.userId]: res.role }));
-        this.successMessage.set(`Rol de ${student.fullName} actualizado a ${res.role}.`);
+        this.successMessage.set(`Rol de ${student.fullName} actualizado a ${this.roleLabels[res.role] || res.role}.`);
       },
       error: (err) => this.handleError(err, 'No se pudo actualizar el rol.')
     });
@@ -157,7 +220,7 @@ export class StudentsComponent implements OnInit {
   }
 
   private emptyForm() {
-    return { username: '', email: '', password: '', firstName: '', lastName: '', bio: '', isActive: true };
+    return { username: '', email: '', password: '', firstName: '', lastName: '', bio: '', isActive: true, roleName: 'Estudiante' };
   }
 
   private clearMessages(): void {
