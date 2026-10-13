@@ -8,6 +8,8 @@ import { OffersComponent } from './components/offers/offers';
 import { RequestsComponent } from './components/requests/requests';
 import { MatchesComponent } from './components/matches/matches';
 import { ExchangesComponent } from './components/exchanges/exchanges';
+import { CalendarComponent } from './components/calendar/calendar';
+import { ReportsComponent } from './components/reports/reports';
 import { roleGuard } from './guards/guard';
 
 export const routes: Routes = [
@@ -38,6 +40,10 @@ export const routes: Routes = [
       { path: 'requests', component: RequestsComponent },
       { path: 'matches', component: MatchesComponent },
       { path: 'exchanges', component: ExchangesComponent },
+      { path: 'calendar', component: CalendarComponent },
+
+      // Moderación de reportes: Administrador y Moderador
+      { path: 'reports', component: ReportsComponent, data: { roles: ['Administrador', 'Moderador'] } },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

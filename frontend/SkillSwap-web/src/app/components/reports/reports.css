@@ -1,0 +1,6 @@
+/* La página de reportes reutiliza las clases globales ss- del sistema.
+   Estilos específicos mínimos aquí. */
+
+.ss-page p {
+  line-height: 1.5;
+}

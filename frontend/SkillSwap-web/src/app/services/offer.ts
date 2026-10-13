@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 export interface Offer {
   id: number;
   description: string;
+  level: string;        // Básico, Intermedio, Avanzado
+  modality: string;     // Online, Presencial, Ambas
   isActive: boolean;
   studentId: number;
   studentName: string;
@@ -12,6 +14,10 @@ export interface Offer {
   skillName: string;
   category: string;
 }
+
+// Opciones válidas (coinciden con el modelo Offer del backend)
+export const OFFER_LEVELS = ['Básico', 'Intermedio', 'Avanzado'];
+export const OFFER_MODALITIES = ['Online', 'Presencial', 'Ambas'];
 
 export interface OfferFilters {
   skillName?: string;
@@ -37,11 +43,11 @@ export class OfferService {
     return this.http.get<Offer[]>(this.baseUrl, { params });
   }
 
-  create(offer: { studentId: number; skillId: number; description: string; isActive: boolean }): Observable<any> {
+  create(offer: { studentId: number; skillId: number; description: string; level: string; modality: string; isActive: boolean }): Observable<any> {
     return this.http.post<any>(this.baseUrl, offer);
   }
 
-  update(id: number, offer: { id: number; studentId: number; skillId: number; description: string; isActive: boolean }): Observable<void> {
+  update(id: number, offer: { id: number; studentId: number; skillId: number; description: string; level: string; modality: string; isActive: boolean }): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${id}`, offer);
   }
 

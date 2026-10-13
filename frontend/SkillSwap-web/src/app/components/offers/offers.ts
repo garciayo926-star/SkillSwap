@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Offer, OfferService } from '../../services/offer';
+import { Offer, OfferService, OFFER_LEVELS, OFFER_MODALITIES } from '../../services/offer';
 import { Skill, SkillService } from '../../services/skill';
 import { Student, StudentService } from '../../services/student';
 import { AuthService } from '../../services/auth';
@@ -15,6 +15,9 @@ import { AuthService } from '../../services/auth';
   styleUrls: ['./offers.css']
 })
 export class OffersComponent implements OnInit {
+  levels = OFFER_LEVELS;
+  modalities = OFFER_MODALITIES;
+
   // Estado del backend (asíncrono): signals
   offers = signal<Offer[]>([]);
   skills = signal<Skill[]>([]);
@@ -103,6 +106,8 @@ export class OffersComponent implements OnInit {
       studentId: offer.studentId,
       skillId: offer.skillId,
       description: offer.description,
+      level: offer.level || 'Básico',
+      modality: offer.modality || 'Ambas',
       isActive: offer.isActive
     };
     this.showForm = true;
@@ -116,7 +121,7 @@ export class OffersComponent implements OnInit {
       return;
     }
 
-    const data = { studentId: f.studentId, skillId: f.skillId, description: f.description, isActive: f.isActive };
+    const data = { studentId: f.studentId, skillId: f.skillId, description: f.description, level: f.level, modality: f.modality, isActive: f.isActive };
     const call = this.editingId
       ? this.offerService.update(this.editingId, { id: this.editingId, ...data })
       : this.offerService.create(data);
@@ -152,7 +157,7 @@ export class OffersComponent implements OnInit {
   }
 
   private emptyForm() {
-    return { studentId: null as number | null, skillId: null as number | null, description: '', isActive: true };
+    return { studentId: null as number | null, skillId: null as number | null, description: '', level: 'Básico', modality: 'Ambas', isActive: true };
   }
 
   private clearMessages(): void {

@@ -5,6 +5,40 @@
    Clases con prefijo "ss-" reutilizadas por las páginas CRUD
    ========================================================= */
 
+/* =========================================================
+   TEMAS DE COLOR (selector en el menú lateral)
+   El atributo data-theme se aplica en <html>; estas variables
+   recolorean toda la app (botones, acentos, barras, enlaces).
+   ========================================================= */
+:root,
+html[data-theme="emerald"] {
+  --accent: #059669;
+  --accent-dark: #047857;
+  --accent-subtle: #ecfdf5;
+  --accent-contrast: #ffffff;
+}
+
+html[data-theme="blue"] {
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
+  --accent-subtle: #eff6ff;
+  --accent-contrast: #ffffff;
+}
+
+html[data-theme="purple"] {
+  --accent: #7c3aed;
+  --accent-dark: #6d28d9;
+  --accent-subtle: #f5f3ff;
+  --accent-contrast: #ffffff;
+}
+
+html[data-theme="amber"] {
+  --accent: #d97706;
+  --accent-dark: #b45309;
+  --accent-subtle: #fffbeb;
+  --accent-contrast: #ffffff;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -118,7 +152,7 @@ body {
 .ss-field select:focus,
 .ss-field textarea:focus {
   outline: none;
-  border-color: #ff3838;
+  border-color: var(--accent);
 }
 
 .ss-field textarea {
@@ -158,8 +192,8 @@ body {
 .ss-btn:hover { opacity: 0.9; }
 .ss-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.ss-btn-primary { background: #ff3838; }
-.ss-btn-primary:hover { background: #ff4757; }
+.ss-btn-primary { background: var(--accent); }
+.ss-btn-primary:hover { background: var(--accent-dark); }
 .ss-btn-success { background: #00b894; }
 .ss-btn-light { background: #f1f2f6; color: #2f3542; }
 .ss-btn-danger { background: #ff4757; }

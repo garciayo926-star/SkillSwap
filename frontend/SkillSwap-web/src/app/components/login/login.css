@@ -33,6 +33,25 @@
 
 
 /* =========================================================
+   CANVAS DEL FONDO ANIMADO (red neuronal + órbitas)
+   ========================================================= */
+
+.neural-canvas {
+
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  z-index: 1;               /* sobre el degradado, debajo de lámpara y tarjeta */
+
+  pointer-events: none;     /* no bloquea los clics ni el formulario */
+}
+
+
+/* =========================================================
    ILUMINACIÓN CUANDO SE ENCIENDE LA LÁMPARA
    ========================================================= */
 

@@ -34,22 +34,22 @@
       <p class="hint-text">Este es tu espacio en SkillSwap. Aquí ves únicamente tu actividad.</p>
 
       <div class="student-stats-row">
-        <div class="mini-stat-card">
+        <a routerLink="/offers" class="mini-stat-card clickable-mini">
           <h4>Mis Ofertas</h4>
           <p>{{ myActiveOffers() }} Activas</p>
-        </div>
-        <div class="mini-stat-card">
+        </a>
+        <a routerLink="/requests" class="mini-stat-card clickable-mini">
           <h4>Mis Solicitudes</h4>
           <p>{{ myActiveRequests() }} Activas</p>
-        </div>
-        <div class="mini-stat-card">
+        </a>
+        <a routerLink="/matches" class="mini-stat-card clickable-mini">
           <h4>Pendientes</h4>
           <p>{{ myProfile()?.exchangesPending ?? 0 }}</p>
-        </div>
-        <div class="mini-stat-card">
+        </a>
+        <a routerLink="/exchanges" class="mini-stat-card clickable-mini">
           <h4>Intercambios</h4>
           <p>{{ myProfile()?.exchangesCompleted ?? 0 }} Realizados</p>
-        </div>
+        </a>
       </div>
 
       <div class="sub-header-title">Sugerencias para ti</div>
@@ -68,13 +68,13 @@
 
     <!-- TARJETAS DE INDICADORES SUPERIORES -->
     <section class="bi-kpi-grid">
-      <div class="kpi-box main-kpi">
+      <a routerLink="/students" class="kpi-box main-kpi clickable-kpi">
         <div class="kpi-icon-container">👥</div>
         <div class="kpi-data">
           <h2>{{ analytics()?.totalUsers ?? 0 | number }}</h2>
-          <p>Usuarios Totales en la Red · {{ analytics()?.totalSkills ?? 0 }} habilidades en catálogo</p>
+          <p>Usuarios Totales en la Red · {{ analytics()?.totalSkills ?? 0 }} habilidades en catálogo →</p>
         </div>
-      </div>
+      </a>
 
       <div class="kpi-box">
         <div class="percentage-circle pink-circle">{{ inactivityRate() }}%</div>
@@ -98,23 +98,43 @@
 
       <!-- COLUMNA IZQUIERDA: HABILIDADES -->
       <div class="bi-card">
-        <h3>Habilidades Populares (más ofertadas)</h3>
-        <div class="metric-row-badge" *ngFor="let s of analytics()?.topOfferedSkills; let i = index">
-          <span>{{ s.name }} <small class="ss-muted">({{ s.category }})</small></span>
-          <span [class.badge-teal]="i === 0" [class.badge-dark]="i > 0">{{ s.count }}</span>
+        <h3>Demanda de Habilidades (más ofertadas)</h3>
+
+        <!-- BUSCADOR / FILTRO EN TIEMPO REAL -->
+        <div class="skill-search">
+          <span class="skill-search-icon">🔍</span>
+          <input #searchBox type="text"
+                 placeholder="Filtrar habilidad..."
+                 [value]="skillFilter()"
+                 (input)="skillFilter.set(searchBox.value)">
+          <button *ngIf="skillFilter()" class="skill-search-clear" (click)="skillFilter.set('')" title="Limpiar">✕</button>
         </div>
-        <p *ngIf="!analytics()?.topOfferedSkills?.length" class="hint-text">Aún no hay ofertas registradas.</p>
+
+        <!-- GRÁFICO DE BARRAS ANIMADO (con tooltip al pasar el mouse) -->
+        <div class="bar-chart" *ngIf="filteredOfferedSkills().length; else noOffered">
+          <div class="bar-col" *ngFor="let s of filteredOfferedSkills()">
+            <div class="bar-col-track">
+              <div class="bar-col-fill" [style.height]="barHeight(s.count)">
+                <span class="bar-tooltip">{{ s.name }}: {{ s.count }} ofertas</span>
+              </div>
+            </div>
+            <span class="bar-col-label" [title]="s.name">{{ s.name }}</span>
+          </div>
+        </div>
+        <ng-template #noOffered>
+          <p class="hint-text">{{ skillFilter() ? 'Sin coincidencias para “' + skillFilter() + '”.' : 'Aún no hay ofertas registradas.' }}</p>
+        </ng-template>
 
         <div class="sub-header-title">Habilidades más solicitadas</div>
         <ul class="clean-list">
-          <li *ngFor="let s of analytics()?.topRequestedSkills"><span>{{ s.name }}</span> <b>{{ s.count }}</b></li>
-          <li *ngIf="!analytics()?.topRequestedSkills?.length"><span>Sin solicitudes registradas</span> <b>0</b></li>
+          <li *ngFor="let s of filteredRequestedSkills()"><span>{{ s.name }}</span> <b>{{ s.count }}</b></li>
+          <li *ngIf="!filteredRequestedSkills().length"><span>Sin coincidencias</span> <b>0</b></li>
         </ul>
 
-        <div class="bottom-metric-highlight">
-          <p>Ofertas activas / Solicitudes activas</p>
+        <a routerLink="/offers" class="bottom-metric-highlight clickable-metric">
+          <p>Ofertas activas / Solicitudes activas →</p>
           <h2>{{ analytics()?.totalOffers ?? 0 }} / {{ analytics()?.totalRequests ?? 0 }} 📊</h2>
-        </div>
+        </a>
       </div>
 
       <!-- COLUMNA CENTRAL: DESGLOSE POR ROL (solo Master) E INTERCAMBIOS -->

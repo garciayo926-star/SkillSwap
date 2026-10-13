@@ -15,6 +15,11 @@ export interface Exchange {
   status: string;
   dateProposed: string;
   dateCompleted: string | null;
+  // Agenda de la sesión (calendario)
+  sessionDate: string | null;
+  sessionEndDate: string | null;
+  room: string;
+  meetingUrl: string;
   rating: number;
   feedback: string;
 }
@@ -66,6 +71,16 @@ export class ExchangeService {
 
   updateStatus(id: number, data: { status: string; rating?: number; feedback?: string }): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${id}/status`, data);
+  }
+
+  // Agendar la sesión: fecha/hora de inicio y fin, sala y enlace a la clase
+  schedule(id: number, data: {
+    sessionDate: string | null;
+    sessionEndDate: string | null;
+    room: string;
+    meetingUrl: string;
+  }): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/${id}/schedule`, data);
   }
 
   delete(id: number): Observable<void> {

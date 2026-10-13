@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Skill, SkillService } from '../../services/skill';
+import { Skill, SkillService, SKILL_STATUSES } from '../../services/skill';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -20,9 +20,12 @@ export class SkillsComponent implements OnInit {
   errorMessage = signal('');
   successMessage = signal('');
 
+  statuses = SKILL_STATUSES;
+
   // Filtros y formulario: propiedades normales ligadas con [(ngModel)]
   searchFilter = '';
   categoryFilter = '';
+  statusFilter = '';
 
   showForm = false;
   editingId: number | null = null;
@@ -30,6 +33,7 @@ export class SkillsComponent implements OnInit {
   formCategory = '';
 
   isAdmin = false;
+  canModerate = false;
 
   constructor(
     private skillService: SkillService,
@@ -38,13 +42,15 @@ export class SkillsComponent implements OnInit {
 
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
+    // Administrador y Moderador pueden aprobar/rechazar habilidades propuestas
+    this.canModerate = this.isAdmin || this.authService.getUserRole() === 'Moderador';
     this.loadCategories();
     this.loadSkills();
   }
 
   loadSkills(): void {
     this.loading.set(true);
-    this.skillService.getAll({ search: this.searchFilter, category: this.categoryFilter }).subscribe({
+    this.skillService.getAll({ search: this.searchFilter, category: this.categoryFilter, status: this.statusFilter }).subscribe({
       next: (data) => {
         this.skills.set(data);
         this.loading.set(false);
@@ -62,7 +68,33 @@ export class SkillsComponent implements OnInit {
   clearFilters(): void {
     this.searchFilter = '';
     this.categoryFilter = '';
+    this.statusFilter = '';
     this.loadSkills();
+  }
+
+  // Clase de color del badge según el estado de aprobación
+  statusClass(status: string): string {
+    switch (status) {
+      case 'Aprobada': return 'ss-badge-teal';
+      case 'Pendiente': return 'ss-badge-orange';
+      case 'Rechazada': return 'ss-badge-red';
+      default: return 'ss-badge-gray';
+    }
+  }
+
+  // Aprobar o rechazar una habilidad propuesta (Moderador/Administrador)
+  review(skill: Skill, status: 'Aprobada' | 'Rechazada'): void {
+    this.clearMessages();
+    const accion = status === 'Aprobada' ? 'aprobar' : 'rechazar';
+    if (!confirm(`¿Deseas ${accion} la habilidad "${skill.name}"?`)) return;
+
+    this.skillService.review(skill.id, status).subscribe({
+      next: () => {
+        this.successMessage.set(`Habilidad "${skill.name}" marcada como ${status}.`);
+        this.loadSkills();
+      },
+      error: (err) => this.handleError(err, `No se pudo ${accion} la habilidad.`)
+    });
   }
 
   openCreate(): void {

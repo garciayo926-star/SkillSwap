@@ -73,6 +73,10 @@ namespace SkillSwap.API.Migrations
                     b.Property<int>("InitiatorStudentId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("MeetingUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int?>("OfferedSkillId")
                         .HasColumnType("integer");
 
@@ -85,7 +89,14 @@ namespace SkillSwap.API.Migrations
                     b.Property<int?>("RequestedSkillId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Room")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("SessionDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("SessionEndDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")

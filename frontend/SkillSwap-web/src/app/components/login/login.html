@@ -1,6 +1,11 @@
 <div class="auth-container" [class.light-on]="lamparaEncendida">
 
   <!-- ========================================= -->
+  <!-- FONDO ANIMADO (red neuronal + órbitas) -->
+  <!-- ========================================= -->
+  <canvas #neuralCanvas class="neural-canvas"></canvas>
+
+  <!-- ========================================= -->
   <!-- LÁMPARA -->
   <!-- ========================================= -->
   <div class="lamp-container" (click)="activarLampara()" aria-label="Lámpara">

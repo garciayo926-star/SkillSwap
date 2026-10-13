@@ -1,0 +1,138 @@
+/* =========================================================
+   CALENDARIO DE CLASES (vista agenda tipo Moodle)
+   ========================================================= */
+
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pending-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #e8ecf2;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* ---------- Agenda por días ---------- */
+.calendar-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.calendar-day {
+  border-left: 4px solid #cbd5e1;
+  padding-left: 16px;
+}
+
+.calendar-day.day-today {
+  border-left-color: var(--accent);
+}
+
+.calendar-day.day-past {
+  opacity: 0.6;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.day-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: capitalize;
+}
+
+.day-tag {
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- Tarjeta de sesión ---------- */
+.session-card {
+  display: flex;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e8ecf2;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.session-card:hover {
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+.session-time {
+  flex-shrink: 0;
+  min-width: 110px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  padding-top: 2px;
+}
+
+.session-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.session-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.session-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.session-actions a {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .session-card {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .session-time {
+    min-width: 0;
+  }
+}

@@ -33,6 +33,20 @@
           </select>
         </div>
       </div>
+      <div class="ss-form-grid">
+        <div class="ss-field">
+          <label>Nivel de dominio</label>
+          <select [(ngModel)]="form.level" name="level">
+            <option *ngFor="let l of levels" [value]="l">{{ l }}</option>
+          </select>
+        </div>
+        <div class="ss-field">
+          <label>Modalidad</label>
+          <select [(ngModel)]="form.modality" name="modality">
+            <option *ngFor="let m of modalities" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+      </div>
       <div class="ss-field desc-field">
         <label>Descripción</label>
         <textarea [(ngModel)]="form.description" name="description" placeholder="Ej: Enseño Photoshop básico y retoque de fotos"></textarea>
@@ -100,6 +114,8 @@
             <th>Habilidad</th>
             <th>Categoría</th>
             <th>Estudiante</th>
+            <th>Nivel</th>
+            <th>Modalidad</th>
             <th>Descripción</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -110,6 +126,8 @@
             <td><strong>{{ o.skillName }}</strong></td>
             <td><span class="ss-chip">{{ o.category }}</span></td>
             <td>{{ o.studentName }}</td>
+            <td><span class="ss-chip">{{ o.level }}</span></td>
+            <td>{{ o.modality }}</td>
             <td>{{ o.description || '—' }}</td>
             <td>
               <span class="ss-badge" [class.ss-badge-teal]="o.isActive" [class.ss-badge-gray]="!o.isActive">

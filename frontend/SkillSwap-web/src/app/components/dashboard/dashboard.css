@@ -31,15 +31,15 @@ body {
 
 .logo-badge-exec {
   font-size: 26px;
-  background: #ff3838;
+  background: var(--accent);
   color: white;
   width: 45px;
   height: 45px;
-  border-radius: 50%;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(255, 56, 56, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .bi-title-section h1 {
@@ -89,9 +89,9 @@ body {
 }
 
 .pill.active-pill {
-  background: #ff3838;
+  background: var(--accent);
   color: #ffffff;
-  box-shadow: 0 2px 6px rgba(255, 56, 56, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .btn-logout-exec {
@@ -121,16 +121,17 @@ body {
 .kpi-box {
   background: #ffffff;
   padding: 22px;
-  border-radius: 10px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   gap: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  border-top: 4px solid #1a1e24;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.07);
+  border: 1px solid #e8ecf2;
+  border-top: 4px solid #cbd5e1;
 }
 
 .main-kpi {
-  border-top-color: #ff3838;
+  border-top-color: var(--accent);
 }
 
 .kpi-icon-container {
@@ -152,9 +153,9 @@ body {
 }
 
 .pink-circle {
-  background: #ffe2e5;
-  color: #ff3838;
-  border: 3px solid #ff3838;
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border: 3px solid var(--accent);
 }
 
 .teal-circle {
@@ -194,8 +195,9 @@ body {
 .bi-card {
   background: #ffffff;
   padding: 22px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.07);
+  border: 1px solid #e8ecf2;
 }
 
 .bi-card h3 {
@@ -260,12 +262,12 @@ body {
 }
 
 .bottom-metric-highlight {
-  background: #f8f9fa;
+  background: var(--accent-subtle);
   padding: 12px;
   border-radius: 8px;
   margin-top: 18px;
   text-align: center;
-  border-left: 4px solid #ff3838;
+  border-left: 4px solid var(--accent);
 }
 
 .bottom-metric-highlight p {
@@ -302,7 +304,7 @@ body {
 }
 
 .bar-fill {
-  background: #ff3838;
+  background: var(--accent);
   height: 100%;
   border-radius: 5px;
 }
@@ -348,7 +350,7 @@ body {
   margin: 6px 0 0 0;
   font-size: 18px;
   font-weight: bold;
-  color: #0984e3;
+  color: var(--accent);
 }
 
 .mini-status-box {
@@ -374,7 +376,7 @@ body {
 }
 
 .hint-text a {
-  color: #ff3838;
+  color: var(--accent);
   font-weight: 600;
   text-decoration: none;
 }
@@ -404,6 +406,186 @@ body {
   padding: 12px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* =========================================================
+   INTERACTIVIDAD: buscador, gráfico animado y tarjetas clickeables
+   ========================================================= */
+
+/* ---------- Buscador / filtro de habilidades ---------- */
+.skill-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 4px 0 18px 0;
+}
+
+.skill-search-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.skill-search input {
+  width: 100%;
+  padding: 9px 34px 9px 34px;
+  border: 1px solid #e1e7ef;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #2f3542;
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.skill-search input:focus {
+  border-color: var(--accent);
+  background: #ffffff;
+}
+
+.skill-search-clear {
+  position: absolute;
+  right: 8px;
+  border: none;
+  background: #e2e8f0;
+  color: #64748b;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.skill-search-clear:hover {
+  background: #cbd5e1;
+}
+
+/* ---------- Gráfico de barras animado ---------- */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  height: 180px;
+  padding-top: 10px;
+  margin-bottom: 6px;
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+}
+
+.bar-col-track {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar-col-fill {
+  position: relative;
+  width: 70%;
+  max-width: 42px;
+  min-height: 4px;
+  background: var(--accent);
+  border-radius: 8px 8px 0 0;
+  transform-origin: bottom;
+  animation: growBar 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: filter 0.2s, transform 0.2s;
+  cursor: default;
+}
+
+.bar-col-fill:hover {
+  filter: brightness(1.12);
+  transform: scaleY(1.03);
+}
+
+@keyframes growBar {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Tooltip que aparece al pasar el mouse sobre la barra */
+.bar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #1a1e24;
+  color: #ffffff;
+  font-size: 11px;
+  white-space: nowrap;
+  padding: 5px 9px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 5;
+}
+
+.bar-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1a1e24;
+}
+
+.bar-col-fill:hover .bar-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.bar-col-label {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #747d8c;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Tarjetas y métricas clickeables ---------- */
+.clickable-kpi,
+.clickable-mini,
+.clickable-metric {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.clickable-kpi:hover,
+.clickable-metric:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.clickable-mini {
+  display: block;
+}
+
+.clickable-mini:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.07);
+}
+
+.bottom-metric-highlight.clickable-metric {
+  display: block;
 }
 
 @media (max-width: 1100px) {

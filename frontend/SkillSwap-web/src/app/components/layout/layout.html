@@ -17,6 +17,21 @@
       </a>
     </nav>
 
+    <!-- SELECTOR DE TEMA DE COLOR -->
+    <div class="theme-switcher">
+      <span class="theme-switcher-label">Tema de color</span>
+      <div class="theme-dots">
+        <button *ngFor="let t of themes"
+                class="theme-dot"
+                [class.active-dot]="currentTheme === t.id"
+                [style.background]="t.color"
+                (click)="setTheme(t.id)"
+                [title]="t.label"
+                [attr.aria-label]="'Tema ' + t.label">
+        </button>
+      </div>
+    </div>
+
     <div class="sidebar-user">
       <div class="user-avatar">{{ username.charAt(0).toUpperCase() }}</div>
       <div class="user-data">

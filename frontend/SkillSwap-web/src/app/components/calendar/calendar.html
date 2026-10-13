@@ -1,0 +1,95 @@
+<div class="ss-page">
+
+  <!-- CABECERA -->
+  <header class="ss-page-header">
+    <div>
+      <h1>📅 Calendario de Clases</h1>
+      <p>Días, horarios y salas de tus intercambios. Conéctate a tu clase desde aquí.</p>
+    </div>
+    <button class="ss-btn ss-btn-light" (click)="load()">Actualizar</button>
+  </header>
+
+  <!-- MENSAJES -->
+  <div *ngIf="errorMessage()" class="ss-alert ss-alert-error">{{ errorMessage() }}</div>
+  <div *ngIf="successMessage()" class="ss-alert ss-alert-success">{{ successMessage() }}</div>
+
+  <!-- FORMULARIO DE AGENDA -->
+  <section *ngIf="scheduling" class="ss-card">
+    <h3>Agendar clase: {{ subject(scheduling) }}</h3>
+    <p class="ss-muted">{{ scheduling.initiatorName }} ⇄ {{ scheduling.receiverName }}</p>
+    <div class="ss-form-grid">
+      <div class="ss-field">
+        <label>Inicio (fecha y hora)</label>
+        <input type="datetime-local" [(ngModel)]="formStart" name="formStart" />
+      </div>
+      <div class="ss-field">
+        <label>Fin (fecha y hora)</label>
+        <input type="datetime-local" [(ngModel)]="formEnd" name="formEnd" />
+      </div>
+      <div class="ss-field">
+        <label>Sala / Aula</label>
+        <input type="text" [(ngModel)]="formRoom" name="formRoom" placeholder="Ej: Lab 3, Aula 204" />
+      </div>
+      <div class="ss-field">
+        <label>Enlace a la clase (online)</label>
+        <input type="url" [(ngModel)]="formMeetingUrl" name="formMeetingUrl" placeholder="https://meet.google.com/..." />
+      </div>
+    </div>
+    <div class="ss-form-actions">
+      <button type="button" class="ss-btn ss-btn-light" (click)="cancelSchedule()">Cancelar</button>
+      <button type="button" class="ss-btn ss-btn-success" (click)="saveSchedule()">Guardar clase</button>
+    </div>
+  </section>
+
+  <!-- INTERCAMBIOS ACEPTADOS SIN AGENDAR -->
+  <section *ngIf="pendingToSchedule().length > 0" class="ss-card">
+    <h3>Pendientes por agendar ({{ pendingToSchedule().length }})</h3>
+    <div class="pending-list">
+      <div class="pending-item" *ngFor="let e of pendingToSchedule()">
+        <div>
+          <strong>{{ subject(e) }}</strong>
+          <span class="ss-muted"> · {{ e.initiatorName }} ⇄ {{ e.receiverName }}</span>
+        </div>
+        <button *ngIf="canManage(e)" class="ss-btn ss-btn-sm ss-btn-primary" (click)="openSchedule(e)">Agendar clase</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENDA POR DÍAS -->
+  <section class="ss-card">
+    <h3>Próximas clases agendadas</h3>
+
+    <div *ngIf="loading()" class="ss-empty">Cargando calendario...</div>
+    <div *ngIf="!loading() && days().length === 0" class="ss-empty">
+      Aún no hay clases agendadas. Agenda una desde los intercambios aceptados.
+    </div>
+
+    <div class="calendar-agenda">
+      <div class="calendar-day" *ngFor="let day of days()" [class.day-today]="day.isToday" [class.day-past]="day.isPast">
+        <div class="day-header">
+          <span class="day-label">{{ day.label }}</span>
+          <span *ngIf="day.isToday" class="day-tag">Hoy</span>
+        </div>
+
+        <div class="session-card" *ngFor="let s of day.sessions">
+          <div class="session-time">{{ timeRange(s) }}</div>
+          <div class="session-body">
+            <div class="session-title">
+              {{ subject(s) }}
+              <span class="ss-badge" [class.ss-badge-teal]="s.status === 'Completado'" [class.ss-badge-blue]="s.status === 'Aceptado'">{{ s.status }}</span>
+            </div>
+            <div class="session-meta">
+              <span>👥 {{ s.initiatorName }} ⇄ {{ s.receiverName }}</span>
+              <span *ngIf="s.room">🏫 Sala: <strong>{{ s.room }}</strong></span>
+            </div>
+            <div class="session-actions">
+              <a *ngIf="s.meetingUrl" [href]="s.meetingUrl" target="_blank" rel="noopener" class="ss-btn ss-btn-sm ss-btn-success">🔗 Conectarse a la clase</a>
+              <button *ngIf="canManage(s)" class="ss-btn ss-btn-sm ss-btn-light" (click)="openSchedule(s)">Editar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

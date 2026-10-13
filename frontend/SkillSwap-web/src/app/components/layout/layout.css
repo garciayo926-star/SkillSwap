@@ -3,54 +3,58 @@
   min-height: 100vh;
 }
 
-/* Menú lateral oscuro con acento rojo (misma línea visual del dashboard) */
+/* Menú lateral claro y moderno; el acento proviene del tema activo */
 .sidebar {
-  width: 230px;
+  width: 250px;
   flex-shrink: 0;
-  background-color: #1a1e24;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #1e293b;
   display: flex;
   flex-direction: column;
   position: sticky;
   top: 0;
   height: 100vh;
+  border-right: 1px solid #e5e7eb;
 }
 
 .sidebar-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 22px 20px;
-  border-bottom: 1px solid #2f3542;
+  padding: 20px 22px;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .brand-badge {
-  font-size: 20px;
-  background: #ff3838;
+  font-size: 18px;
+  background: var(--accent);
+  color: #ffffff;
   width: 38px;
   height: 38px;
-  border-radius: 50%;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(255, 56, 56, 0.4);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 .sidebar-brand h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #0f172a;
 }
 
 .sidebar-brand h2 span {
-  color: #ff3838;
+  color: var(--accent);
 }
 
 .sidebar-nav {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 14px 10px;
+  padding: 16px 12px;
   gap: 4px;
   overflow-y: auto;
 }
@@ -60,8 +64,8 @@
   align-items: center;
   gap: 12px;
   padding: 10px 14px;
-  border-radius: 8px;
-  color: #a4b0be;
+  border-radius: 12px;
+  color: #64748b;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -69,14 +73,14 @@
 }
 
 .nav-link:hover {
-  background: #2f3542;
-  color: #ffffff;
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 .nav-link.active-link {
-  background: #ff3838;
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(255, 56, 56, 0.4);
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .nav-icon {
@@ -84,19 +88,59 @@
   text-align: center;
 }
 
+/* ---------- Selector de tema de color ---------- */
+.theme-switcher {
+  padding: 14px 18px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.theme-switcher-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+}
+
+.theme-dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.theme-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.theme-dot:hover {
+  transform: scale(1.12);
+}
+
+.theme-dot.active-dot {
+  border-color: #0f172a;
+  box-shadow: 0 0 0 2px #ffffff inset;
+}
+
 .sidebar-user {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px;
-  border-top: 1px solid #2f3542;
+  padding: 16px 18px;
+  border-top: 1px solid #f1f5f9;
 }
 
 .user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: #2f3542;
+  background: var(--accent-subtle);
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -112,6 +156,7 @@
 
 .user-data strong {
   font-size: 13px;
+  color: #0f172a;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -119,27 +164,32 @@
 
 .user-data span {
   font-size: 11px;
-  color: #a4b0be;
+  color: #94a3b8;
 }
 
 .btn-logout-side {
-  background: #ff4757;
-  color: #ffffff;
+  background: #f1f5f9;
+  color: #ef4444;
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 15px;
+  transition: background 0.2s;
 }
 
 .btn-logout-side:hover {
-  background: #ff3838;
+  background: #fee2e2;
 }
 
 .layout-content {
   flex: 1;
   min-width: 0;
+  /* Fondo con un leve tinte del tema para que las tarjetas blancas resalten */
+  background:
+    linear-gradient(180deg, var(--accent-subtle) 0%, #e7ebf1 260px, #e7ebf1 100%);
+  min-height: 100vh;
 }
 
 @media (max-width: 800px) {

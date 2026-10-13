@@ -67,6 +67,10 @@ namespace SkillSwap.API.Controllers
                     e.Status,
                     e.DateProposed,
                     e.DateCompleted,
+                    e.SessionDate,
+                    e.SessionEndDate,
+                    e.Room,
+                    e.MeetingUrl,
                     e.Rating,
                     e.Feedback
                 }).ToListAsync();
@@ -93,6 +97,10 @@ namespace SkillSwap.API.Controllers
                     e.Status,
                     e.DateProposed,
                     e.DateCompleted,
+                    e.SessionDate,
+                    e.SessionEndDate,
+                    e.Room,
+                    e.MeetingUrl,
                     e.Rating,
                     e.Feedback
                 })
@@ -327,6 +335,48 @@ namespace SkillSwap.API.Controllers
                 score = dto.Rating,
                 revieweeStudentId,
                 newReputation = reviewee != null ? Math.Round(reviewee.Reputation, 2) : 0
+            });
+        }
+
+        public class ScheduleDto
+        {
+            public DateTime? SessionDate { get; set; }      // inicio (fecha + hora)
+            public DateTime? SessionEndDate { get; set; }   // fin
+            public string? Room { get; set; }               // sala física
+            public string? MeetingUrl { get; set; }         // enlace a la clase online
+        }
+
+        // PUT: api/Exchanges/5/schedule (Agendar la sesión: fecha, horas, sala y enlace)
+        // Solo tiene sentido agendar un intercambio Aceptado o ya Completado.
+        [HttpPut("{id}/schedule")]
+        public async Task<IActionResult> ScheduleSession(int id, ScheduleDto dto)
+        {
+            var exchange = await _context.Exchanges.FindAsync(id);
+            if (exchange == null) return NotFound(new { message = "Intercambio no encontrado." });
+
+            if (exchange.Status != "Aceptado" && exchange.Status != "Completado")
+                return BadRequest(new { message = $"Solo se puede agendar un intercambio aceptado. Estado actual: '{exchange.Status}'." });
+
+            if (dto.SessionDate.HasValue && dto.SessionEndDate.HasValue && dto.SessionEndDate <= dto.SessionDate)
+                return BadRequest(new { message = "La hora de fin debe ser posterior a la hora de inicio." });
+
+            // PostgreSQL (Npgsql) exige DateTimeKind.Utc para columnas timestamptz;
+            // tratamos la fecha/hora recibida como UTC para evitar errores al guardar.
+            exchange.SessionDate = dto.SessionDate.HasValue
+                ? DateTime.SpecifyKind(dto.SessionDate.Value, DateTimeKind.Utc) : null;
+            exchange.SessionEndDate = dto.SessionEndDate.HasValue
+                ? DateTime.SpecifyKind(dto.SessionEndDate.Value, DateTimeKind.Utc) : null;
+            exchange.Room = dto.Room ?? string.Empty;
+            exchange.MeetingUrl = dto.MeetingUrl ?? string.Empty;
+            await _context.SaveChangesAsync();
+
+            return Ok(new {
+                message = "Sesión agendada correctamente.",
+                exchange.Id,
+                exchange.SessionDate,
+                exchange.SessionEndDate,
+                exchange.Room,
+                exchange.MeetingUrl
             });
         }
 

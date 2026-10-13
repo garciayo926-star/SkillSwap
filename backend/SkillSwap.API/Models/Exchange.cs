@@ -23,8 +23,16 @@ namespace SkillSwap.API.Models
         public DateTime DateProposed { get; set; } = DateTime.UtcNow;
         public DateTime? DateCompleted { get; set; }
 
-        // Fecha acordada para la sesión de intercambio (opcional)
+        // --- Agenda de la sesión (vista tipo calendario / Moodle) ---
+        // SessionDate = inicio de la clase (fecha + hora); SessionEndDate = fin
         public DateTime? SessionDate { get; set; }
+        public DateTime? SessionEndDate { get; set; }
+
+        // Sala física donde se dicta la clase (ej. "Lab 3", "Aula 204")
+        public string Room { get; set; } = string.Empty;
+
+        // Enlace para conectarse a la clase online (Meet, Zoom, etc.)
+        public string MeetingUrl { get; set; } = string.Empty;
 
         // Calificación/feedback rápidos (resumen); el detalle vive en la entidad Review (1:1)
         public int Rating { get; set; }
