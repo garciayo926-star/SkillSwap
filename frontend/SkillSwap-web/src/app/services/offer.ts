@@ -7,6 +7,7 @@ export interface Offer {
   description: string;
   level: string;        // Básico, Intermedio, Avanzado
   modality: string;     // Online, Presencial, Ambas
+  totalHours: number;   // Carga horaria total del curso
   isActive: boolean;
   studentId: number;
   studentName: string;
@@ -43,11 +44,11 @@ export class OfferService {
     return this.http.get<Offer[]>(this.baseUrl, { params });
   }
 
-  create(offer: { studentId: number; skillId: number; description: string; level: string; modality: string; isActive: boolean }): Observable<any> {
+  create(offer: { studentId: number; skillId: number; description: string; level: string; modality: string; totalHours: number; isActive: boolean }): Observable<any> {
     return this.http.post<any>(this.baseUrl, offer);
   }
 
-  update(id: number, offer: { id: number; studentId: number; skillId: number; description: string; level: string; modality: string; isActive: boolean }): Observable<void> {
+  update(id: number, offer: { id: number; studentId: number; skillId: number; description: string; level: string; modality: string; totalHours: number; isActive: boolean }): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${id}`, offer);
   }
 

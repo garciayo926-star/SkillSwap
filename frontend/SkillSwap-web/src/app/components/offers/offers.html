@@ -46,6 +46,10 @@
             <option *ngFor="let m of modalities" [value]="m">{{ m }}</option>
           </select>
         </div>
+        <div class="ss-field">
+          <label>Carga horaria total (horas)</label>
+          <input type="number" min="1" max="500" [(ngModel)]="form.totalHours" name="totalHours" placeholder="Ej: 10" />
+        </div>
       </div>
       <div class="ss-field desc-field">
         <label>Descripción</label>
@@ -116,6 +120,7 @@
             <th>Estudiante</th>
             <th>Nivel</th>
             <th>Modalidad</th>
+            <th>Horas</th>
             <th>Descripción</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -128,6 +133,7 @@
             <td>{{ o.studentName }}</td>
             <td><span class="ss-chip">{{ o.level }}</span></td>
             <td>{{ o.modality }}</td>
+            <td><strong>{{ o.totalHours }}</strong> h</td>
             <td>{{ o.description || '—' }}</td>
             <td>
               <span class="ss-badge" [class.ss-badge-teal]="o.isActive" [class.ss-badge-gray]="!o.isActive">
@@ -135,9 +141,9 @@
               </span>
             </td>
             <td>
-              <div class="ss-actions" *ngIf="canManage(o)">
-                <button class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(o)">Editar</button>
-                <button class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(o)">Eliminar</button>
+              <div class="icon-actions" *ngIf="canManage(o)">
+                <button class="icon-btn" (click)="openEdit(o)" title="Editar" aria-label="Editar">✏️</button>
+                <button class="icon-btn icon-btn-danger" (click)="delete(o)" title="Eliminar" aria-label="Eliminar">🗑️</button>
               </div>
             </td>
           </tr>

@@ -128,15 +128,15 @@
               <span *ngIf="!canChangeRole" class="ss-badge ss-badge-dark">{{ roleLabelOf(s.userId) }}</span>
             </td>
             <td>
-              <div class="ss-actions">
-                <button *ngIf="canEdit" class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(s)">Editar</button>
+              <div class="icon-actions">
+                <button *ngIf="canEdit" class="icon-btn" (click)="openEdit(s)" title="Editar" aria-label="Editar">✏️</button>
 
                 <!-- Activar / desactivar (el Profesor solo activa) -->
-                <button *ngIf="!s.isActive && canActivate" class="ss-btn ss-btn-sm ss-btn-success" (click)="toggleStatus(s)">Activar</button>
-                <button *ngIf="s.isActive && canDeactivate" class="ss-btn ss-btn-sm ss-btn-light" (click)="toggleStatus(s)">Desactivar</button>
+                <button *ngIf="!s.isActive && canActivate" class="icon-btn icon-btn-success" (click)="toggleStatus(s)" title="Activar" aria-label="Activar">✅</button>
+                <button *ngIf="s.isActive && canDeactivate" class="icon-btn" (click)="toggleStatus(s)" title="Desactivar" aria-label="Desactivar">🚫</button>
 
-                <button *ngIf="canResetPassword" class="ss-btn ss-btn-sm ss-btn-light" (click)="resetPassword(s)">Contraseña</button>
-                <button *ngIf="canDelete" class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(s)">Eliminar</button>
+                <button *ngIf="canResetPassword" class="icon-btn" (click)="resetPassword(s)" title="Restablecer contraseña" aria-label="Restablecer contraseña">🔑</button>
+                <button *ngIf="canDelete" class="icon-btn icon-btn-danger" (click)="delete(s)" title="Eliminar" aria-label="Eliminar">🗑️</button>
               </div>
             </td>
           </tr>

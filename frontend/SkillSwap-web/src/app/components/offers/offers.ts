@@ -108,6 +108,7 @@ export class OffersComponent implements OnInit {
       description: offer.description,
       level: offer.level || 'Básico',
       modality: offer.modality || 'Ambas',
+      totalHours: offer.totalHours || 1,
       isActive: offer.isActive
     };
     this.showForm = true;
@@ -121,7 +122,7 @@ export class OffersComponent implements OnInit {
       return;
     }
 
-    const data = { studentId: f.studentId, skillId: f.skillId, description: f.description, level: f.level, modality: f.modality, isActive: f.isActive };
+    const data = { studentId: f.studentId, skillId: f.skillId, description: f.description, level: f.level, modality: f.modality, totalHours: Number(f.totalHours) || 1, isActive: f.isActive };
     const call = this.editingId
       ? this.offerService.update(this.editingId, { id: this.editingId, ...data })
       : this.offerService.create(data);
@@ -157,7 +158,7 @@ export class OffersComponent implements OnInit {
   }
 
   private emptyForm() {
-    return { studentId: null as number | null, skillId: null as number | null, description: '', level: 'Básico', modality: 'Ambas', isActive: true };
+    return { studentId: null as number | null, skillId: null as number | null, description: '', level: 'Básico', modality: 'Ambas', totalHours: 1, isActive: true };
   }
 
   private clearMessages(): void {

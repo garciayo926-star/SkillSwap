@@ -15,6 +15,9 @@ namespace SkillSwap.API.Models
         // Modalidad de enseñanza: Online, Presencial, Ambas
         public string Modality { get; set; } = "Ambas";
 
+        // Carga horaria total del curso (horas que dura enseñar esta habilidad)
+        public int TotalHours { get; set; } = 1;
+
         public string Description { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
     }

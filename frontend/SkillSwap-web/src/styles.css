@@ -242,6 +242,55 @@ body {
   flex-wrap: wrap;
 }
 
+/* ---------- Botones de acción con icono (reutilizable en todas las páginas) ---------- */
+.icon-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+
+.icon-btn:hover {
+  background: #eef2f7;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.icon-btn:active {
+  transform: translateY(0);
+}
+
+/* Variantes de color al pasar el mouse para reforzar la acción */
+.icon-btn-success:hover {
+  background: #e8f8f1;
+  border-color: #00b894;
+}
+
+.icon-btn-danger:hover {
+  background: #fdecec;
+  border-color: #ff4757;
+}
+
+.icon-btn-primary:hover {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+}
+
 /* ---------- Badges / chips ---------- */
 .ss-badge {
   display: inline-block;

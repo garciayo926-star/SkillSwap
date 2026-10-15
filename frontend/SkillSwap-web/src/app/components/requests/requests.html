@@ -117,9 +117,9 @@
               </span>
             </td>
             <td>
-              <div class="ss-actions" *ngIf="canManage(o)">
-                <button class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(o)">Editar</button>
-                <button class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(o)">Eliminar</button>
+              <div class="icon-actions" *ngIf="canManage(o)">
+                <button class="icon-btn" (click)="openEdit(o)" title="Editar" aria-label="Editar">✏️</button>
+                <button class="icon-btn icon-btn-danger" (click)="delete(o)" title="Eliminar" aria-label="Eliminar">🗑️</button>
               </div>
             </td>
           </tr>

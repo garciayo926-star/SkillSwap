@@ -6,3 +6,5 @@
 .ss-checkbox {
   margin-top: 12px;
 }
+
+/* Los estilos .icon-btn / .icon-actions ahora viven en src/styles.css (globales) */

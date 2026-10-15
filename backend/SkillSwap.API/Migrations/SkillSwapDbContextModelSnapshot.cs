@@ -145,6 +145,9 @@ namespace SkillSwap.API.Migrations
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("TotalHours")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SkillId");

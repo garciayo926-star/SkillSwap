@@ -91,12 +91,12 @@
             <td><span class="ss-badge ss-badge-teal">{{ skill.offersCount }}</span></td>
             <td><span class="ss-badge">{{ skill.requestsCount }}</span></td>
             <td *ngIf="canModerate">
-              <div class="ss-actions">
+              <div class="icon-actions">
                 <!-- Aprobar / Rechazar: solo cuando está pendiente de revisión -->
-                <button *ngIf="skill.status === 'Pendiente'" class="ss-btn ss-btn-sm ss-btn-success" (click)="review(skill, 'Aprobada')">Aprobar</button>
-                <button *ngIf="skill.status === 'Pendiente'" class="ss-btn ss-btn-sm ss-btn-danger" (click)="review(skill, 'Rechazada')">Rechazar</button>
-                <button class="ss-btn ss-btn-sm ss-btn-light" (click)="openEdit(skill)">Editar</button>
-                <button class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(skill)">Eliminar</button>
+                <button *ngIf="skill.status === 'Pendiente'" class="icon-btn icon-btn-success" (click)="review(skill, 'Aprobada')" title="Aprobar" aria-label="Aprobar">✅</button>
+                <button *ngIf="skill.status === 'Pendiente'" class="icon-btn icon-btn-danger" (click)="review(skill, 'Rechazada')" title="Rechazar" aria-label="Rechazar">🚫</button>
+                <button class="icon-btn" (click)="openEdit(skill)" title="Editar" aria-label="Editar">✏️</button>
+                <button class="icon-btn icon-btn-danger" (click)="delete(skill)" title="Eliminar" aria-label="Eliminar">🗑️</button>
               </div>
             </td>
           </tr>

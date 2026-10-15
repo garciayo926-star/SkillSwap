@@ -84,7 +84,7 @@
             </div>
             <div class="session-actions">
               <a *ngIf="s.meetingUrl" [href]="s.meetingUrl" target="_blank" rel="noopener" class="ss-btn ss-btn-sm ss-btn-success">🔗 Conectarse a la clase</a>
-              <button *ngIf="canManage(s)" class="ss-btn ss-btn-sm ss-btn-light" (click)="openSchedule(s)">Editar</button>
+              <button *ngIf="canManage(s)" class="icon-btn" (click)="openSchedule(s)" title="Editar clase" aria-label="Editar">✏️</button>
             </div>
           </div>
         </div>

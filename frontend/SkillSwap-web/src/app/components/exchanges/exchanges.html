@@ -109,12 +109,12 @@
               <span *ngIf="e.status !== 'Completado'" class="ss-muted">—</span>
             </td>
             <td>
-              <div class="ss-actions">
-                <button *ngIf="canRespond(e)" class="ss-btn ss-btn-sm ss-btn-success" (click)="changeStatus(e, 'Aceptado')">Aceptar</button>
-                <button *ngIf="canRespond(e)" class="ss-btn ss-btn-sm ss-btn-danger" (click)="changeStatus(e, 'Rechazado')">Rechazar</button>
-                <button *ngIf="canComplete(e)" class="ss-btn ss-btn-sm ss-btn-primary" (click)="openComplete(e)">Completar</button>
-                <button *ngIf="canCancel(e)" class="ss-btn ss-btn-sm ss-btn-light" (click)="changeStatus(e, 'Cancelado')">Cancelar</button>
-                <button *ngIf="isAdmin" class="ss-btn ss-btn-sm ss-btn-danger" (click)="delete(e)">Eliminar</button>
+              <div class="icon-actions">
+                <button *ngIf="canRespond(e)" class="icon-btn icon-btn-success" (click)="changeStatus(e, 'Aceptado')" title="Aceptar" aria-label="Aceptar">✅</button>
+                <button *ngIf="canRespond(e)" class="icon-btn icon-btn-danger" (click)="changeStatus(e, 'Rechazado')" title="Rechazar" aria-label="Rechazar">❌</button>
+                <button *ngIf="canComplete(e)" class="icon-btn icon-btn-primary" (click)="openComplete(e)" title="Completar y calificar" aria-label="Completar">🏁</button>
+                <button *ngIf="canCancel(e)" class="icon-btn" (click)="changeStatus(e, 'Cancelado')" title="Cancelar" aria-label="Cancelar">🚫</button>
+                <button *ngIf="isAdmin" class="icon-btn icon-btn-danger" (click)="delete(e)" title="Eliminar" aria-label="Eliminar">🗑️</button>
               </div>
             </td>
           </tr>

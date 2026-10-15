@@ -82,7 +82,9 @@
             <td><span class="ss-badge" [ngClass]="statusClass(r.status)">{{ r.status }}</span></td>
             <td>{{ r.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
             <td>
-              <button class="ss-btn ss-btn-sm ss-btn-primary" (click)="openManage(r)">Gestionar</button>
+              <div class="icon-actions">
+                <button class="icon-btn icon-btn-primary" (click)="openManage(r)" title="Gestionar reporte" aria-label="Gestionar">⚙️</button>
+              </div>
             </td>
           </tr>
         </tbody>

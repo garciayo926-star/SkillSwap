@@ -55,6 +55,7 @@ namespace SkillSwap.API.Controllers
                     o.Description,
                     o.Level,
                     o.Modality,
+                    o.TotalHours,
                     o.IsActive,
                     StudentId = o.Student!.Id,
                     StudentName = o.Student.User!.FirstName + " " + o.Student.User.LastName,
@@ -77,6 +78,7 @@ namespace SkillSwap.API.Controllers
                     o.Description,
                     o.Level,
                     o.Modality,
+                    o.TotalHours,
                     o.IsActive,
                     StudentId = o.Student!.Id,
                     StudentName = o.Student.User!.FirstName + " " + o.Student.User.LastName,
@@ -136,6 +138,9 @@ namespace SkillSwap.API.Controllers
 
         private async Task<IActionResult?> ValidateOfferAsync(Offer offer)
         {
+            if (offer.TotalHours < 1 || offer.TotalHours > 500)
+                return BadRequest(new { message = "La carga horaria debe estar entre 1 y 500 horas." });
+
             var studentExists = await _context.Students.AnyAsync(s => s.Id == offer.StudentId);
             if (!studentExists) return BadRequest(new { message = "El Estudiante especificado no existe." });
 
